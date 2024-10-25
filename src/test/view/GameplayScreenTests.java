@@ -1,4 +1,4 @@
-package viewTests;
+package view;
 
 public class GameplayScreenTests {
 }

@@ -1,8 +1,7 @@
-package modelTests;
+package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import model.TriviaQuestion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,17 +10,18 @@ public class TriviaQuestionTests {
     /**
      * Question string for testing.
      */
-    private final static String TEST_QUESTION = "Test Question";
+    private static final String TEST_QUESTION = "Test Question";
 
     /**
      * Answer string for testing.
      */
-    private final static String TEST_ANSWER = "Correct Answer for Test";
+    private static final String TEST_ANSWER = "Correct Answer for Test";
 
     /**
      * Default question type for testing.
      */
-    private final static TriviaQuestion.QuestionType TEST_DEFAULT_TYPE = TriviaQuestion.QuestionType.ShortAnswer;
+    private static final TriviaQuestion.QuestionType TEST_DEFAULT_TYPE
+            = TriviaQuestion.QuestionType.ShortAnswer;
 
     /**
      * Instance to be used for testing.

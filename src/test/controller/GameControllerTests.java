@@ -1,4 +1,4 @@
-package controllerTests;
+package controller;
 
 public class GameControllerTests {
 }

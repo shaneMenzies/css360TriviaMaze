@@ -11,26 +11,28 @@ public class TriviaQuestion {
     /**
      * Question part of this question.
      */
-    private String myQuestion;
+    private final String myQuestion;
 
     /**
      * Answer part of this question.
      */
-    private String myAnswer;
+    private final String myAnswer;
 
     /**
      * Type of this question.
      */
-    private QuestionType myType;
+    private final QuestionType myType;
 
     /**
-     * Creates a new TriviaQuestion with the provided values for the question, answer, and type.
+     * Creates a new TriviaQuestion with the provided
+     *  values for the question, answer, and type.
      *
      * @param theQuestion Question text itself
      * @param theAnswer Answer to the question
      * @param theType Type of the question.
      */
-    public TriviaQuestion(String theQuestion, String theAnswer, QuestionType theType) {
+    public TriviaQuestion(final String theQuestion,
+                          final String theAnswer, final QuestionType theType) {
         myQuestion = theQuestion;
         myAnswer = theAnswer;
         myType = theType;
@@ -64,8 +66,20 @@ public class TriviaQuestion {
     }
 
     public enum QuestionType {
+
+        /**
+         * A multiple choice question.
+         */
         MultipleChoice,
+
+        /**
+         * A true or false question.
+         */
         TrueFalse,
+
+        /**
+         * A short answer question.
+         */
         ShortAnswer,
     }
 

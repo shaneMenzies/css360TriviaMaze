@@ -1,4 +1,4 @@
-package modelTests;
+package model;
 
 public class GameModelTests {
 }
