@@ -6,14 +6,32 @@ import java.util.List;
 
 /**
  * Represents a player in the game, tracking their position, score, and lives.
+ * This class is final to prevent inheritance.
  *
  * @author Arafa Mohamed
  * @version 10/25/24
  */
-public class Player {
+public final class Player {
+
+    /**
+     * The current coordinates of the player on the game grid.
+     */
     private Coordinates myPosition;
+
+    /**
+     * The player's current score, which can increase as they progress in the game.
+     */
     private int myScore;
+
+    /**
+     * The number of lives the player has remaining, which decreases upon failure in game tasks.
+     */
     private int myLives;
+
+    /**
+     * A list of listeners that are notified of any updates to the player's state, such as
+     * position, score, or lives.
+     */
     private List<PlayerUpdateListener> myListeners;
 
     /**
@@ -22,7 +40,7 @@ public class Player {
      * @param score    the initial score of the player
      * @param lives    the initial number of lives of the player
      */
-    public Player(Coordinates position, int score, int lives) {
+    public Player(final Coordinates position, final int score, final int lives) {
         myPosition = position;
         myScore = score;
         myLives = lives;
@@ -66,7 +84,7 @@ public class Player {
      * Sets the player's position and updates listeners.
      * @param position the new coordinates for the player
      */
-    public void setPosition(Coordinates position) {
+    public void setPosition(final Coordinates position) {
         myPosition = position;
         updateListeners();
     }
@@ -75,7 +93,7 @@ public class Player {
      * Sets the player's score and updates listeners.
      * @param score the new score for the player
      */
-    public void setScore(int score) {
+    public void setScore(final int score) {
         myScore = score;
         updateListeners();
     }
@@ -84,7 +102,7 @@ public class Player {
      * Sets the player's number of lives and updates listeners.
      * @param lives the new number of lives for the player
      */
-    public void setLives(int lives) {
+    public void setLives(final int lives) {
         myLives = lives;
         updateListeners();
     }
@@ -93,7 +111,7 @@ public class Player {
      * Adds a listener that will be notified of updates to this player.
      * @param listener the listener to be added
      */
-    public void addUpdateListener(PlayerUpdateListener listener) {
+    public void addUpdateListener(final PlayerUpdateListener listener) {
         myListeners.add(listener);
     }
 
@@ -101,9 +119,10 @@ public class Player {
      * Removes a listener so that it will no longer receive updates.
      * @param listener the listener to be removed
      */
-    public void removeUpdateListener(PlayerUpdateListener listener) {
+    public void removeUpdateListener(final PlayerUpdateListener listener) {
         myListeners.remove(listener);
     }
+
 }
 
 
