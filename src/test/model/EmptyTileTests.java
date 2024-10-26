@@ -52,6 +52,6 @@ class EmptyTileTests {
      */
     @Test
     void getTileID() {
-        assertEquals(TileID.Empty, myTestTile.getTileID());
+        assertEquals(TileID.EMPTY, myTestTile.getTileID());
     }
 }

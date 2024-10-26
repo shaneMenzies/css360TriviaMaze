@@ -6,7 +6,7 @@ package model;
  * @author Shane Menzies
  * @version 10/25/24
  */
-public class WallTile implements Tile {
+public final class WallTile implements Tile {
 
     /**
      * Exception message for a player incorrectly moving onto a wall tile.
@@ -32,7 +32,7 @@ public class WallTile implements Tile {
 
     @Override
     public TileID getTileID() {
-        return TileID.Wall;
+        return TileID.WALL;
     }
 
     /**

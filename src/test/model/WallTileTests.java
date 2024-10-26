@@ -32,7 +32,9 @@ class WallTileTests {
      */
     @Test
     void onMovedTo() {
-        assertThrows(WallTile.InvalidPositionException.class, () -> myTestTile.onMovedTo(null));
+        assertThrows(WallTile.InvalidPositionException.class, ()
+                -> myTestTile.onMovedTo(null)
+        );
     }
 
     /**
@@ -50,6 +52,6 @@ class WallTileTests {
      */
     @Test
     void getTileID() {
-        assertEquals(TileID.Wall, myTestTile.getTileID());
+        assertEquals(TileID.WALL, myTestTile.getTileID());
     }
 }

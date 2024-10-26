@@ -70,17 +70,17 @@ public class TriviaQuestion {
         /**
          * A multiple choice question.
          */
-        MultipleChoice,
+        MULTIPLE_CHOICE,
 
         /**
          * A true or false question.
          */
-        TrueFalse,
+        TRUE_FALSE,
 
         /**
          * A short answer question.
          */
-        ShortAnswer,
+        SHORT_ANSWER,
     }
 
 }

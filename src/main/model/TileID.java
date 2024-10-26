@@ -11,20 +11,20 @@ public enum TileID {
     /**
      * Empty tile.
      */
-    Empty,
+    EMPTY,
 
     /**
      * Wall tile.
      */
-    Wall,
+    WALL,
 
     /**
      * A closed door tile.
      */
-    DoorClosed,
+    DOOR_CLOSED,
 
     /**
      * An open door tile.
      */
-    DoorOpen,
+    DOOR_OPEN,
 }

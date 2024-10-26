@@ -27,7 +27,7 @@ public class TriviaQuestionTests {
      * Default question type for testing.
      */
     private static final TriviaQuestion.QuestionType TEST_DEFAULT_TYPE
-            = TriviaQuestion.QuestionType.ShortAnswer;
+            = TriviaQuestion.QuestionType.SHORT_ANSWER;
 
     /**
      * Instance to be used for testing.

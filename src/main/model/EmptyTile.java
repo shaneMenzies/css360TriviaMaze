@@ -25,6 +25,6 @@ public final class EmptyTile implements Tile {
 
     @Override
     public TileID getTileID() {
-        return TileID.Empty;
+        return TileID.EMPTY;
     }
 }
