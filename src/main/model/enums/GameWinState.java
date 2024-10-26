@@ -8,9 +8,16 @@ package model.enums;
  * @version 10/26/24
  */
 public enum GameWinState {
+
+    /** Indicates the player has won the game. */
     Victory,
+
+    /** Indicates the game is currently ongoing. */
     InProgress,
+
+    /** Indicates the player has lost the game. */
     Failure
+
 }
 
 

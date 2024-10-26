@@ -13,26 +13,17 @@ import java.util.List;
  */
 public final class Player {
 
-    /**
-     * The current coordinates of the player on the game grid.
-     */
+    /** The current coordinates of the player on the game grid. */
     private Coordinates myPosition;
 
-    /**
-     * The player's current score, which can increase as they progress in the game.
-     */
+    /** The player's current score, which can increase as they progress in the game. */
     private int myScore;
 
-    /**
-     * The number of lives the player has remaining, which decreases upon failure in game tasks.
-     */
+    /** The number of lives the player has remaining, which decreases upon failure in game tasks.*/
     private int myLives;
 
-    /**
-     * A list of listeners that are notified of any updates to the player's state, such as
-     * position, score, or lives.
-     */
-    private List<PlayerUpdateListener> myListeners;
+    /** A list of listeners that are notified of any updates to the player's state. */
+    private final List<PlayerUpdateListener> myListeners;
 
     /**
      * Constructs a new Player with the specified position, score, and number of lives.
