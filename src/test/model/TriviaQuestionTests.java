@@ -5,6 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for the TriviaQuestion class.
+ *
+ * @author Shane Menzies
+ * @version 10/25/24
+ */
 public class TriviaQuestionTests {
 
     /**
@@ -41,7 +47,7 @@ public class TriviaQuestionTests {
      */
     @Test
     void getQuestion() {
-        assertEquals(myTestQuestion.getQuestion(), TEST_QUESTION);
+        assertEquals(TEST_QUESTION, myTestQuestion.getQuestion());
     }
 
     /**
@@ -49,7 +55,7 @@ public class TriviaQuestionTests {
      */
     @Test
     void getAnswer() {
-        assertEquals(myTestQuestion.getAnswer(), TEST_ANSWER);
+        assertEquals(TEST_ANSWER, myTestQuestion.getAnswer());
     }
 
     /**
@@ -59,7 +65,7 @@ public class TriviaQuestionTests {
     void getType() {
         for (TriviaQuestion.QuestionType questionType : TriviaQuestion.QuestionType.values()) {
             myTestQuestion = new TriviaQuestion(TEST_QUESTION, TEST_ANSWER, questionType);
-            assertEquals(myTestQuestion.getType(), questionType);
+            assertEquals(questionType, myTestQuestion.getType());
         }
     }
 }
