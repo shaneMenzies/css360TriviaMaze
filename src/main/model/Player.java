@@ -1,6 +1,8 @@
 package model;
 
-// STILL WORKING ON IT, BUT ALMOST DONE.
+import model.interfaces.PlayerUpdateListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a player in the game, tracking their position, score, and lives.
@@ -24,13 +26,16 @@ public class Player {
         myPosition = position;
         myScore = score;
         myLives = lives;
+        myListeners = new ArrayList<>();
     }
 
     /**
      * Notifies all registered listeners about player updates.
      */
     private void updateListeners() {
-
+        for (PlayerUpdateListener listener : myListeners) {
+            listener.doUpdate(this);
+        }
     }
 
     /**
