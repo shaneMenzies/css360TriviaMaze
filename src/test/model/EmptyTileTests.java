@@ -32,7 +32,7 @@ class EmptyTileTests {
      */
     @Test
     void tryMoveTo() {
-        assertEquals(true, myTestTile.tryMoveTo(null));
+        assertTrue(myTestTile.tryMoveTo(null));
     }
 
     /**
