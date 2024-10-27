@@ -1,4 +1,8 @@
-package model;
+package model.tiles;
+
+import model.Player;
+import model.Tile;
+import model.TileID;
 
 /**
  * An empty tile.
@@ -14,12 +18,8 @@ public final class EmptyTile implements Tile {
     public EmptyTile() { }
 
     @Override
-    public void onMovedTo(final Player thePlayer) {
-        // Nothing happens for an empty tile.
-    }
-
-    @Override
-    public boolean isPassable() {
+    public boolean tryMoveTo(final Player thePlayer) {
+        // A player can always move to an empty tile.
         return true;
     }
 

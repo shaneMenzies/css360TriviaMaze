@@ -9,18 +9,12 @@ package model;
 public interface Tile {
 
     /**
-     * Method called when a player moves onto this tile.
+     * Method called when a player attempts to move onto this tile.
      *
-     * @param thePlayer The player who moved onto this tile.
+     * @param thePlayer The player who is trying to move onto this tile.
+     * @return Whether the player successfully moved onto this tile.
      */
-    void onMovedTo(Player thePlayer);
-
-    /**
-     * Whether this tile can be moved through by the player.
-     *
-     * @return True if the player can pass, false if not.
-     */
-    boolean isPassable();
+    boolean tryMoveTo(Player thePlayer);
 
     /**
      * Gets the TileID for this type of tile.
@@ -28,5 +22,4 @@ public interface Tile {
      * @return Corresponding ID.
      */
     TileID getTileID();
-
 }

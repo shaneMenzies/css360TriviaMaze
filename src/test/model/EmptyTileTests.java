@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.tiles.EmptyTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,23 +28,11 @@ class EmptyTileTests {
     }
 
     /**
-     * Tests EmptyTile's onMovedTo() function, which should always do nothing, and so
-     *  should not cause any exceptions.
+     * Tests EmptyTile's tryMoveTo() function, which should always return true.
      */
     @Test
-    void onMovedTo() {
-        assertDoesNotThrow(() -> {
-            // TODO: Add a real player instance to this test once Player Class is done.
-            myTestTile.onMovedTo(null);
-        });
-    }
-
-    /**
-     * Tests EmptyTile's isPassable() method, which should always return true.
-     */
-    @Test
-    void isPassable() {
-        assertTrue(myTestTile.isPassable());
+    void tryMoveTo() {
+        assertEquals(true, myTestTile.tryMoveTo(null));
     }
 
     /**

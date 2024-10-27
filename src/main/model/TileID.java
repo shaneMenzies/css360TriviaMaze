@@ -19,9 +19,14 @@ public enum TileID {
     WALL,
 
     /**
+     * An unanswered door tile.
+     */
+    DOOR_UNANSWERED,
+
+    /**
      * A closed door tile.
      */
-    DOOR_CLOSED,
+    DOOR_LOCKED,
 
     /**
      * An open door tile.

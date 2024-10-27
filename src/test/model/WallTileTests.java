@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.tiles.WallTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,23 +28,11 @@ class WallTileTests {
     }
 
     /**
-     * Tests WallTile's onMovedTo method, which should never get called,
-     *  which is why it should always raise an exception if it is called.
+     * Tests WallTile's tryMoveTo() method, which should always return false.
      */
     @Test
-    void onMovedTo() {
-        assertThrows(WallTile.InvalidPositionException.class, ()
-                -> myTestTile.onMovedTo(null)
-        );
-    }
-
-    /**
-     * Tests WallTile's isPassable method, which should always
-     *  return false, since walls are never passable.
-     */
-    @Test
-    void isPassable() {
-        assertFalse(myTestTile.isPassable());
+    void tryMoveTo() {
+        assertEquals(false, myTestTile.tryMoveTo(null));
     }
 
     /**
