@@ -1,21 +1,58 @@
 package view;
 
-import javax.swing.*;
+import controller.Music;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import controller.Music;
+import javax.swing.*;
 import javax.swing.Timer;
 
+/**
+ * Represents the main view for the title screen of the game.
+ * Displays animated title, background image, and buttons for starting and exiting the game.
+ *
+ * Extends JFrame to handle frame and component setup.
+ *
+ * @author Cynthia Lopez
+ * @version 10/27/24
+ */
+
 public class TitleScreen extends JFrame {
+    
+    /**
+     * Main frame for title.
+     */
     private final JFrame myTitleWindow = new JFrame();
+
+    /**
+     * Button to start game.
+     */
     private final JButton myStart;
+
+    /**
+     * Button to exit game.
+     */
     private final JButton myExit;
+
+    /**
+     * Label for animated title.
+     */
     private JLabel myTitleLabel;
+
+    /**
+     * Vertical position for game title to be able to animate.
+     */
     private int myTitleScreenY = 0;
+
+    /**
+     * Main panel to organize buttons within title frame.
+     */
     private final JPanel myLayout = new JPanel();
 
-
+    /**
+     * Constructor for class and initializes JButtons.
+     * Sets up all components, animation and music.
+     */
     public TitleScreen() {
         myStart = new JButton("Play");
         myExit = new JButton("Exit");
@@ -23,6 +60,9 @@ public class TitleScreen extends JFrame {
         setUpTitle();
     }
 
+    /**
+     * Configures all components.
+     */
     private void setUpTitle() {
         moveTitle();
         buttons();
@@ -30,6 +70,9 @@ public class TitleScreen extends JFrame {
         backgroundMusic();
     }
 
+    /**
+     * Configures frame size, location, title and background image.
+     */
     private void frame() {
         myTitleWindow.setLocation(700, 200);
         myTitleWindow.setSize(558, 732);
@@ -45,12 +88,18 @@ public class TitleScreen extends JFrame {
         myTitleWindow.add(tvLabel);
     }
 
+    /**
+     * Adds start and exit button to the bottom of the frame.
+     */
     private void buttons() {
         myLayout.add(myStart);
         myLayout.add(myExit);
         myTitleWindow.add(myLayout, BorderLayout.SOUTH);
     }
 
+    /**
+     * Animates title image by moving it vertically in a floating motion.
+     */
     private void moveTitle() {
         ImageIcon imageTitle = new ImageIcon("src/images/title.png");
         myTitleLabel = new JLabel(imageTitle);
@@ -79,6 +128,9 @@ public class TitleScreen extends JFrame {
         myTitleWindow.add(myTitleLabel);
     }
 
+    /**
+     * Plays background music on title screen.
+     */
     private void backgroundMusic() {
         Music music = new Music();
         music.getMusic("src/sounds/game-music-teste-1-204326.wav");
