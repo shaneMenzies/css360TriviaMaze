@@ -42,7 +42,7 @@ public class TitleScreen extends JFrame {
     /**
      * Vertical position for game title to be able to animate.
      */
-    private int myTitleScreenY = 0;
+    private int myTitleScreenY;
 
     /**
      * Main panel to organize buttons within title frame.
@@ -82,8 +82,8 @@ public class TitleScreen extends JFrame {
         myTitleWindow.setVisible(true);
 
 
-        ImageIcon imageTV = new ImageIcon("src/images/title_background.jpg");
-        JLabel tvLabel = new JLabel(imageTV);
+        final ImageIcon imageTV = new ImageIcon("src/images/title_background.jpg");
+        final JLabel tvLabel = new JLabel(imageTV);
 
         myTitleWindow.add(tvLabel);
     }
@@ -101,24 +101,23 @@ public class TitleScreen extends JFrame {
      * Animates title image by moving it vertically in a floating motion.
      */
     private void moveTitle() {
-        ImageIcon imageTitle = new ImageIcon("src/images/title.png");
+        final ImageIcon imageTitle = new ImageIcon("src/images/title.png");
         myTitleLabel = new JLabel(imageTitle);
 
-        Timer titleScreenTimer = new Timer(40, new ActionListener() {
-            boolean movingUp = true;
+        final Timer titleScreenTimer = new Timer(40, new ActionListener() {
+            boolean myMovingUp = true;
 
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if(movingUp) {
+            public void actionPerformed(final ActionEvent theException) {
+                if (myMovingUp) {
                     myTitleScreenY -= 1;
-                    if(myTitleScreenY <= 0) {
-                        movingUp = false;
+                    if (myTitleScreenY <= 0) {
+                        myMovingUp = false;
                     }
-                }
-                else {
+                } else {
                     myTitleScreenY += 1;
-                    if(myTitleScreenY >= 30) {
-                        movingUp = true;
+                    if (myTitleScreenY >= 30) {
+                        myMovingUp = true;
                     }
                 }
                 myTitleLabel.setLocation(getX(), myTitleScreenY);
@@ -132,7 +131,7 @@ public class TitleScreen extends JFrame {
      * Plays background music on title screen.
      */
     private void backgroundMusic() {
-        Music music = new Music();
+        final Music music = new Music();
         music.getMusic("src/sounds/game-music-teste-1-204326.wav");
     }
 }
