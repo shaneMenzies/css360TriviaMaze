@@ -1,5 +1,6 @@
-public final class TriviaMazeMain {
+import view.TitleScreen;
 
+public final class TriviaMazeMain {
     /**
      * Private constructor to prevent instantiation.
      */
@@ -7,5 +8,6 @@ public final class TriviaMazeMain {
 
     public static void main(final String[] theArgs) {
         System.out.println("TriviaMaze: TODO");
+        javax.swing.SwingUtilities.invokeLater(TitleScreen::new);
     }
 }
