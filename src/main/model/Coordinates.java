@@ -32,7 +32,21 @@ public class Coordinates {
         myY = y;
     }
 
+    /**
+     * Gets the room for this coordinate.
+     * @return the room associated with these coordinates
+     */
+    public final Room getRoom() {
+        return myRoom;
+    }
 
+    /**
+     * Gets the x-coordinate.
+     * @return x-coordinate value
+     */
+    public final int getX() {
+        return myX;
+    }
 
 
 
