@@ -55,7 +55,7 @@ public class TitleScreen extends JFrame {
         ImageIcon imageTitle = new ImageIcon("src/images/title.png");
         myTitleLabel = new JLabel(imageTitle);
 
-        Timer titleScreenTimer = new Timer(70, new ActionListener() {
+        Timer titleScreenTimer = new Timer(40, new ActionListener() {
             boolean movingUp = true;
 
             @Override
