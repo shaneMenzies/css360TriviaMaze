@@ -1,9 +1,0 @@
-package controller;
-
-import view.TitleScreen;
-
-public class Main {
-    public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(TitleScreen::new);
-    }
-}
