@@ -10,7 +10,6 @@ import javax.swing.Timer;
 /**
  * Represents the main view for the title screen of the game.
  * Displays animated title, background image, and buttons for starting and exiting the game.
- *
  * Extends JFrame to handle frame and component setup.
  *
  * @author Cynthia Lopez
@@ -82,10 +81,10 @@ public class TitleScreen extends JFrame {
         myTitleWindow.setVisible(true);
 
 
-        final ImageIcon imageTV = new ImageIcon("src/images/title_background.jpg");
-        final JLabel tvLabel = new JLabel(imageTV);
+        final ImageIcon imageBackground = new ImageIcon("src/main/title_background.jpg");
+        final JLabel backgroundLabel = new JLabel(imageBackground);
 
-        myTitleWindow.add(tvLabel);
+        myTitleWindow.add(backgroundLabel);
     }
 
     /**
@@ -101,7 +100,7 @@ public class TitleScreen extends JFrame {
      * Animates title image by moving it vertically in a floating motion.
      */
     private void moveTitle() {
-        final ImageIcon imageTitle = new ImageIcon("src/images/title.png");
+        final ImageIcon imageTitle = new ImageIcon("src/main/title.png");
         myTitleLabel = new JLabel(imageTitle);
 
         final Timer titleScreenTimer = new Timer(40, new ActionListener() {
@@ -132,6 +131,6 @@ public class TitleScreen extends JFrame {
      */
     private void backgroundMusic() {
         final Music music = new Music();
-        music.getMusic("src/sounds/game-music-teste-1-204326.wav");
+        music.getMusic("src/main/game-music-teste-1-204326.wav");
     }
 }
