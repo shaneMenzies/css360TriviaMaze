@@ -1,3 +1,4 @@
+import controller.TitleController;
 import view.TitleScreen;
 
 public final class TriviaMazeMain {
@@ -8,6 +9,7 @@ public final class TriviaMazeMain {
 
     public static void main(final String[] theArgs) {
         System.out.println("TriviaMaze: TODO");
-        javax.swing.SwingUtilities.invokeLater(TitleScreen::new);
+        TitleScreen view = new TitleScreen();
+        new TitleController(view);
     }
 }

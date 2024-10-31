@@ -24,6 +24,36 @@ public class TitleScreen extends JFrame {
     private final JFrame myTitleWindow = new JFrame();
 
     /**
+     * Main panel to organize buttons within title frame.
+     */
+    private final JPanel myLayout = new JPanel();
+
+    /**
+     * Layer for background image and title image.
+     */
+    private final JLayeredPane myImageLayer = new JLayeredPane();
+
+    /**
+     * Image for title.
+     */
+    private final ImageIcon myImageTitle = new ImageIcon("src/main/title.png");
+
+    /**
+     * Label for animated title.
+     */
+    private final JLabel myTitleLabel = new JLabel(myImageTitle);
+
+    /**
+     * Vertical position for game title to be able to animate.
+     */
+    private int myTitleScreenY;
+
+    /**
+     * Music object for background music.
+     */
+    private final Music myMusic = new Music();
+
+    /**
      * Button to start game.
      */
     private final JButton myStart;
@@ -32,21 +62,6 @@ public class TitleScreen extends JFrame {
      * Button to exit game.
      */
     private final JButton myExit;
-
-    /**
-     * Label for animated title.
-     */
-    private JLabel myTitleLabel;
-
-    /**
-     * Vertical position for game title to be able to animate.
-     */
-    private int myTitleScreenY;
-
-    /**
-     * Main panel to organize buttons within title frame.
-     */
-    private final JPanel myLayout = new JPanel();
 
     /**
      * Constructor for class and initializes JButtons.
@@ -73,18 +88,24 @@ public class TitleScreen extends JFrame {
      * Configures frame size, location, title and background image.
      */
     private void frame() {
-        myTitleWindow.setLocation(700, 200);
-        myTitleWindow.setSize(558, 732);
-        myTitleWindow.setResizable(false);
-        myTitleWindow.setTitle("Trivia Maze");
-        myTitleWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        myTitleWindow.setVisible(true);
-
+        myImageLayer.setPreferredSize(new Dimension(558, 732));
 
         final ImageIcon imageBackground = new ImageIcon("src/main/title_background.jpg");
         final JLabel backgroundLabel = new JLabel(imageBackground);
+        backgroundLabel.setBounds(0, 0, 558, 732);
+        myImageLayer.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
 
-        myTitleWindow.add(backgroundLabel);
+        myTitleLabel.setBounds(150, 50, 560, 600);
+        myImageLayer.add(myTitleLabel, JLayeredPane.PALETTE_LAYER);
+
+        myTitleWindow.add(myImageLayer);
+        myTitleWindow.setLocation(700, 200);
+        myTitleWindow.setSize(558, 732);
+        myTitleWindow.setResizable(false);
+        myTitleWindow.setTitle("Level Up");
+        myTitleWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        myTitleWindow.setVisible(true);
     }
 
     /**
@@ -100,9 +121,6 @@ public class TitleScreen extends JFrame {
      * Animates title image by moving it vertically in a floating motion.
      */
     private void moveTitle() {
-        final ImageIcon imageTitle = new ImageIcon("src/main/title.png");
-        myTitleLabel = new JLabel(imageTitle);
-
         final Timer titleScreenTimer = new Timer(40, new ActionListener() {
             boolean myMovingUp = true;
 
@@ -123,14 +141,38 @@ public class TitleScreen extends JFrame {
             }
         });
         titleScreenTimer.start();
-        myTitleWindow.add(myTitleLabel);
     }
 
     /**
      * Plays background music on title screen.
      */
     private void backgroundMusic() {
-        final Music music = new Music();
-        music.getMusic("src/main/game-music-teste-1-204326.wav");
+        myMusic.getMusic("src/main/game-music-teste-1-204326.wav");
+    }
+
+    /**
+     * Getter for start button.
+     *
+     * @return start button.
+     */
+    public JButton getStartButton() {
+        return myStart;
+    }
+
+    /**
+     * Getter for exit button.
+     *
+     * @return exit button.
+     */
+    public JButton getExitButton() {
+        return myExit;
+    }
+
+    /**
+     * Disposes title window once game has begun.
+     */
+    public void disposeTitleWindow() {
+        myMusic.getMusicStop();
+        myTitleWindow.dispose();
     }
 }
