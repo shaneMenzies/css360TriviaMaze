@@ -1,8 +1,7 @@
-package modelTests;
+package model;
 
-import model.Coordinates;
-import model.Player;
-import model.Room;
+import model.tiles.EmptyTile;
+import model.tiles.WallTile;
 
 import model.interfaces.PlayerUpdateListener;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +35,18 @@ public class PlayerTest {
      */
     @BeforeEach
     public void setUp() {
-        initialPosition = new Coordinates(new Room(), 0, 0); // Assuming Room() is a valid constructor
+        // a simple Tile array with mixed tile types
+        Tile[][] tiles = new Tile[2][2]; // Example: 2x2 room
+        tiles[0][0] = new EmptyTile(); // Top-left corner
+        tiles[0][1] = new WallTile();  // Top-right
+        tiles[1][0] = new WallTile();  // Bottom-left
+        tiles[1][1] = new EmptyTile(); // Bottom-right
+
+        // Create a new Room with a type and the tiles
+        Room room = new Room(Room.RoomType.STANDARD, tiles);
+
+        // Assuming Coordinates constructor takes (room, x, y)
+        initialPosition = new Coordinates(room, 0, 0);
         initialScore = 0;
         initialLives = 3;
         player = new Player(initialPosition, initialScore, initialLives); // Create a new Player instance
@@ -75,7 +85,15 @@ public class PlayerTest {
      */
     @Test
     public void testSetPosition() {
-        Coordinates newPosition = new Coordinates(new Room(), 1, 1); // New position
+        // a new Tile array for the new room
+        Tile[][] newTiles = new Tile[2][2];
+        newTiles[0][0] = new EmptyTile();
+        newTiles[0][1] = new WallTile();
+        newTiles[1][0] = new WallTile();
+        newTiles[1][1] = new EmptyTile();
+
+        Room newRoom = new Room(Room.RoomType.STANDARD, newTiles); // New room with tiles
+        Coordinates newPosition = new Coordinates(newRoom, 1, 1); // New position
         player.setPosition(newPosition);
         assertEquals(newPosition, player.getPosition(), "The position should be updated to the new position.");
     }
@@ -108,19 +126,19 @@ public class PlayerTest {
      */
     @Test
     public void testAddUpdateListener() {
-        // Create a named listener implementation to keep track of notifications
+        // a named listener implementation to keep track of notifications
         class TestListener implements PlayerUpdateListener {
-            boolean notified = false; // Flag to track if the listener was notified
+            boolean notified = false;
 
             @Override
             public void doUpdate(Player player) {
-                notified = true; // Mark as notified
+                notified = true;
             }
         }
 
         TestListener listener = new TestListener(); // Instantiate the listener
-        player.addUpdateListener(listener); // Add the listener to the player
-        player.setScore(5); // Change to trigger notification
+        player.addUpdateListener(listener);
+        player.setScore(5);
         assertTrue(listener.notified, "The listener should be notified when the player's score is updated.");
     }
 
@@ -130,23 +148,22 @@ public class PlayerTest {
      */
     @Test
     public void testRemoveUpdateListener() {
-        // Create a named listener implementation to keep track of notifications
+        // a named listener implementation to keep track of notifications
         class TestListener implements PlayerUpdateListener {
-            boolean notified = false; // Flag to track if the listener was notified
+            boolean notified = false;
 
             @Override
             public void doUpdate(Player player) {
-                notified = true; // Mark as notified
+                notified = true;
             }
         }
 
-        TestListener listener = new TestListener(); // Instantiate the listener
-        player.addUpdateListener(listener); // Add the listener to the player
-        player.removeUpdateListener(listener); // Remove the listener
+        TestListener listener = new TestListener();
+        player.addUpdateListener(listener);
+        player.removeUpdateListener(listener);
         player.setLives(2); // Change should not trigger notification
         assertFalse(listener.notified, "The listener should not be notified after being removed.");
     }
-
 
 }
 
