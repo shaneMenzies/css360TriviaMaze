@@ -102,6 +102,17 @@ class RoomTests {
     }
 
     /**
+     * Tests Room's copy constructor.
+     */
+    @Test
+    void testCopy() {
+        final Room testCopy = new Room(myTestRoom);
+
+        assertNotSame(myTestRoom, testCopy);
+        assertNotSame(myTestRoom.getTiles(), testCopy.getTiles());
+    }
+
+    /**
      * Test's Room's getType() method.
      */
     @Test
@@ -167,7 +178,7 @@ class RoomTests {
 
         for (int y = 0; y < TEST_ROOM_HEIGHT; y++) {
             for (int x = 0; x < TEST_ROOM_WIDTH; x++) {
-                assertEquals(testTiles[y][x], myTestRoom.getTile(x, y));
+                assertSame(testTiles[y][x], myTestRoom.getTile(x, y));
             }
         }
     }
