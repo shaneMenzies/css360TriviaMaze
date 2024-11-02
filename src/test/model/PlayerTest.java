@@ -1,10 +1,7 @@
-package modelTests;
-
-import model.Coordinates;
-import model.Player;
-import model.Room;
+package model;
 
 import model.interfaces.PlayerUpdateListener;
+import model.tiles.EmptyTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 10/27/24
  */
 public class PlayerTest {
+
+    /**
+     * Basic room for testing.
+     */
+    private static final Room TEST_ROOM = new Room(Room.RoomType.STANDARD, new EmptyTile[3][3]);
 
     /** Instance of Player to be tested. */
     private Player player;
@@ -36,7 +38,7 @@ public class PlayerTest {
      */
     @BeforeEach
     public void setUp() {
-        initialPosition = new Coordinates(new Room(), 0, 0); // Assuming Room() is a valid constructor
+        initialPosition = new Coordinates(TEST_ROOM, 0, 0); // Assuming Room() is a valid constructor
         initialScore = 0;
         initialLives = 3;
         player = new Player(initialPosition, initialScore, initialLives); // Create a new Player instance
@@ -75,7 +77,7 @@ public class PlayerTest {
      */
     @Test
     public void testSetPosition() {
-        Coordinates newPosition = new Coordinates(new Room(), 1, 1); // New position
+        Coordinates newPosition = new Coordinates(TEST_ROOM, 1, 1); // New position
         player.setPosition(newPosition);
         assertEquals(newPosition, player.getPosition(), "The position should be updated to the new position.");
     }
@@ -149,12 +151,3 @@ public class PlayerTest {
 
 
 }
-
-
-
-
-
-
-
-
-
