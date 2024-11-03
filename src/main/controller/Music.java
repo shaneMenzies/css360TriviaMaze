@@ -13,7 +13,12 @@ import javax.sound.sampled.Clip;
  * @version 10/27/24
  */
 public class Music {
-    
+
+    /**
+     * Audio Clip for game.
+     */
+    private Clip myClip;
+
     /**
      * Plays music from the file specified by the given file path.
      *
@@ -22,20 +27,27 @@ public class Music {
     private void playMusic(String theMusicLocation) {
         try {
             final File musicPath = new File(theMusicLocation);
+            AudioInputStream myAudioInput = AudioSystem.getAudioInputStream(musicPath);
+            myClip = AudioSystem.getClip();
 
             if (musicPath.exists()) {
-                final AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
-                final Clip clip = AudioSystem.getClip();
-                clip.open(audioInput);
-                clip.start();
+                myClip.open(myAudioInput);
+                myClip.start();
+                myClip.loop(Clip.LOOP_CONTINUOUSLY);
 
             } else {
                 System.out.println("Can't find file:" + musicPath.getPath());
-
             }
         } catch (final Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    /**
+     * Stops background music.
+     */
+    private void stopMusic() {
+        myClip.stop();
     }
 
     /**
@@ -45,6 +57,13 @@ public class Music {
      */
     public void getMusic(final String theMusicLocation) {
         playMusic(theMusicLocation);
+    }
+
+    /**
+     * Getter to stop music.
+     */
+    public void getMusicStop() {
+        stopMusic();
     }
 
 }
