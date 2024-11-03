@@ -1,4 +1,4 @@
-package modelTests;
+package model;
 
 // TO be implemented
 
@@ -19,7 +19,3 @@ public class CoordinatesTest {
 
 
 }
-
-
-
-

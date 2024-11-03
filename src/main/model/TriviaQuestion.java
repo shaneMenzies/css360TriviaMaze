@@ -68,14 +68,14 @@ public class TriviaQuestion {
     public enum QuestionType {
 
         /**
-         * A multiple choice question.
-         */
-        MULTIPLE_CHOICE,
-
-        /**
          * A true or false question.
          */
         TRUE_FALSE,
+
+        /**
+         * A multiple choice question.
+         */
+        MULTIPLE_CHOICE,
 
         /**
          * A short answer question.

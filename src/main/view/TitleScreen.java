@@ -36,7 +36,7 @@ public class TitleScreen extends JFrame {
     /**
      * Image for title.
      */
-    private final ImageIcon myImageTitle = new ImageIcon("src/main/title.png");
+    private final ImageIcon myImageTitle = new ImageIcon("resources/images/title.png");
 
     /**
      * Label for animated title.
@@ -90,7 +90,7 @@ public class TitleScreen extends JFrame {
     private void frame() {
         myImageLayer.setPreferredSize(new Dimension(558, 732));
 
-        final ImageIcon imageBackground = new ImageIcon("src/main/title_background.jpg");
+        final ImageIcon imageBackground = new ImageIcon("resources/images/title_background.jpg");
         final JLabel backgroundLabel = new JLabel(imageBackground);
         backgroundLabel.setBounds(0, 0, 558, 732);
         myImageLayer.add(backgroundLabel, JLayeredPane.DEFAULT_LAYER);
@@ -147,7 +147,7 @@ public class TitleScreen extends JFrame {
      * Plays background music on title screen.
      */
     private void backgroundMusic() {
-        myMusic.getMusic("src/main/game-music-teste-1-204326.wav");
+        myMusic.getMusic("resources/sounds/game-music-teste-1-204326.wav");
     }
 
     /**
