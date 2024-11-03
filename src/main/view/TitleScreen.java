@@ -82,7 +82,7 @@ public class TitleScreen extends JFrame {
         myTitleWindow.setVisible(true);
 
 
-        final ImageIcon imageTV = new ImageIcon("src/images/title_background.jpg");
+        final ImageIcon imageTV = new ImageIcon("resources/images/title_background.jpg");
         final JLabel tvLabel = new JLabel(imageTV);
 
         myTitleWindow.add(tvLabel);
@@ -101,7 +101,7 @@ public class TitleScreen extends JFrame {
      * Animates title image by moving it vertically in a floating motion.
      */
     private void moveTitle() {
-        final ImageIcon imageTitle = new ImageIcon("src/images/title.png");
+        final ImageIcon imageTitle = new ImageIcon("resources/images/title.png");
         myTitleLabel = new JLabel(imageTitle);
 
         final Timer titleScreenTimer = new Timer(40, new ActionListener() {
@@ -132,6 +132,6 @@ public class TitleScreen extends JFrame {
      */
     private void backgroundMusic() {
         final Music music = new Music();
-        music.getMusic("src/sounds/game-music-teste-1-204326.wav");
+        music.getMusic("resources/sounds/game-music-teste-1-204326.wav");
     }
 }
