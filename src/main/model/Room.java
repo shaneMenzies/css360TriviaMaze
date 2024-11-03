@@ -66,6 +66,26 @@ public final class Room {
     }
 
     /**
+     * Creates a new Room as a copy of an existing Room.
+     * <p>
+     * This creates a new 2D Tile array for the new Room, however
+     * the contents of the new array will still start as copies of
+     * the original's Tile references.
+     * </p>
+     *
+     * @param theSource Room instance to copy.
+     */
+    public Room(final Room theSource) {
+        myType = theSource.myType;
+
+        // Need to clone each row individually
+        myTiles = new Tile[theSource.getHeight()][];
+        for (int i = 0; i < myTiles.length; i++) {
+            myTiles[i] = theSource.myTiles[i].clone();
+        }
+    }
+
+    /**
      * Gets this room's type.
      *
      * @return Type of this room.

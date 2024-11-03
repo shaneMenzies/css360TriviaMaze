@@ -1,6 +1,5 @@
 package model.tiles;
 
-import model.Player;
 import model.Tile;
 import model.TileID;
 
@@ -18,7 +17,7 @@ public final class WallTile implements Tile {
     public WallTile() { }
 
     @Override
-    public boolean tryMoveTo(final Player thePlayer) {
+    public boolean tryMoveTo() {
         // Players can not move to a wall tile.
         return false;
     }

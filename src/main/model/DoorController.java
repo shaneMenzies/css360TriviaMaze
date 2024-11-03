@@ -41,6 +41,20 @@ public final class DoorController {
         myQuestion = theQuestion;
         myListeners = new ArrayList<>();
         myState = DoorState.UNANSWERED;
+
+        // Initialize each door tile
+        for (int i = 0; i < myDoors.length; i++) {
+            myDoors[i] = new DoorTile();
+        }
+    }
+
+    /**
+     * Gets this controller's doors.
+     *
+     * @return This controller's doors.
+     */
+    public DoorTile[] getDoors() {
+        return myDoors;
     }
 
     /**
@@ -65,9 +79,10 @@ public final class DoorController {
      * Removes an existing update listener from this DoorController.
      *
      * @param theListener Update Listener to remove.
+     * @return True if the provided listener was present and could be removed, False otherwise.
      */
-    public void removeUpdateListener(final DoorUpdateListener theListener) {
-        myListeners.remove(theListener);
+    public boolean removeUpdateListener(final DoorUpdateListener theListener) {
+        return myListeners.remove(theListener);
     }
 
     /**
@@ -117,22 +132,16 @@ public final class DoorController {
     /**
      * A door tile in a room.
      */
-    public class DoorTile implements Tile {
-
-        /**
-         * Exception message for an illegal door state.
-         */
-        private static final String ILLEGAL_STATE_MESSAGE
-                = "DoorController has an illegal DoorState!";
+    public final class DoorTile implements Tile {
 
         /**
          * Constructs a new DoorTile. Should only be able to be called by
-         *  it's outer class, DoorController.
+         *  its outer class, DoorController.
          */
         DoorTile() { }
 
         @Override
-        public boolean tryMoveTo(final Player thePlayer) {
+        public boolean tryMoveTo() {
             return switch (myState) {
                 case UNANSWERED -> {
                     // Trigger associated question, but keep the player where they are.
@@ -145,9 +154,6 @@ public final class DoorController {
                 case LOCKED ->
                     // A locked door can't be moved through.
                         false;
-
-                // myState did not match a valid state!
-                default -> throw new IllegalStateException(ILLEGAL_STATE_MESSAGE);
             };
         }
 
@@ -157,9 +163,6 @@ public final class DoorController {
                 case UNANSWERED -> TileID.DOOR_UNANSWERED;
                 case LOCKED -> TileID.DOOR_LOCKED;
                 case OPEN -> TileID.DOOR_OPEN;
-
-                // myState did not match a valid state!
-                default -> throw new IllegalStateException(ILLEGAL_STATE_MESSAGE);
             };
         }
     }

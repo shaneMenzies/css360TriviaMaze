@@ -4,6 +4,7 @@ import model.tiles.EmptyTile;
 import model.tiles.WallTile;
 
 import model.interfaces.PlayerUpdateListener;
+import model.tiles.EmptyTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 10/27/24
  */
 public class PlayerTest {
+
+    /**
+     * Basic room for testing.
+     */
+    private static final Room TEST_ROOM = new Room(Room.RoomType.STANDARD, new EmptyTile[3][3]);
 
     /** Instance of Player to be tested. */
     private Player player;
@@ -164,14 +170,4 @@ public class PlayerTest {
         player.setLives(2); // Change should not trigger notification
         assertFalse(listener.notified, "The listener should not be notified after being removed.");
     }
-
 }
-
-
-
-
-
-
-
-
-

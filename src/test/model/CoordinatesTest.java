@@ -132,12 +132,5 @@ public class CoordinatesTest {
         assertEquals(coordinates.hashCode(), identicalCoordinates.hashCode(),
                 "Hash codes should match for identical coordinates.");
     }
-
 }
-
-
-
-
-
-
 

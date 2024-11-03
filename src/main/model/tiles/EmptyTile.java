@@ -1,6 +1,5 @@
 package model.tiles;
 
-import model.Player;
 import model.Tile;
 import model.TileID;
 
@@ -18,7 +17,7 @@ public final class EmptyTile implements Tile {
     public EmptyTile() { }
 
     @Override
-    public boolean tryMoveTo(final Player thePlayer) {
+    public boolean tryMoveTo() {
         // A player can always move to an empty tile.
         return true;
     }
