@@ -9,19 +9,15 @@ package model.enums;
 public enum Direction {
 
     /** Represents the upward movement direction. */
-    Up,
+    UP,
 
     /** Represents the downward movement direction. */
-    Down,
+    DOWN,
 
     /** Represents the leftward movement direction. */
-    Left,
+    LEFT,
 
     /** Represents the rightward movement direction. */
-    Right
+    RIGHT
 
 }
-
-
-
-

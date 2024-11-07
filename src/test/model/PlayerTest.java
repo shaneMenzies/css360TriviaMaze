@@ -1,10 +1,7 @@
 package model;
 
-import model.tiles.EmptyTile;
-import model.tiles.WallTile;
 
 import model.interfaces.PlayerUpdateListener;
-import model.tiles.EmptyTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlayerTest {
 
     /**
-     * Basic room for testing.
+     * Default value for the Room X coordinate.
      */
-    private static final Room TEST_ROOM = new Room(Room.RoomType.STANDARD, new EmptyTile[3][3]);
+    private static final int DEFAULT_ROOM_X = 1;
+
+    /**
+     * Default value for the Room Y coordinate.
+     */
+    private static final int DEFAULT_ROOM_Y = 2;
 
     /** Instance of Player to be tested. */
     private Player player;
@@ -41,18 +43,7 @@ public class PlayerTest {
      */
     @BeforeEach
     public void setUp() {
-        // a simple Tile array with mixed tile types
-        Tile[][] tiles = new Tile[2][2]; // Example: 2x2 room
-        tiles[0][0] = new EmptyTile(); // Top-left corner
-        tiles[0][1] = new WallTile();  // Top-right
-        tiles[1][0] = new WallTile();  // Bottom-left
-        tiles[1][1] = new EmptyTile(); // Bottom-right
-
-        // Create a new Room with a type and the tiles
-        Room room = new Room(Room.RoomType.STANDARD, tiles);
-
-        // Assuming Coordinates constructor takes (room, x, y)
-        initialPosition = new Coordinates(room, 0, 0);
+        initialPosition = new Coordinates(DEFAULT_ROOM_X, DEFAULT_ROOM_Y, 0, 0);
         initialScore = 0;
         initialLives = 3;
         player = new Player(initialPosition, initialScore, initialLives); // Create a new Player instance
@@ -91,15 +82,10 @@ public class PlayerTest {
      */
     @Test
     public void testSetPosition() {
-        // a new Tile array for the new room
-        Tile[][] newTiles = new Tile[2][2];
-        newTiles[0][0] = new EmptyTile();
-        newTiles[0][1] = new WallTile();
-        newTiles[1][0] = new WallTile();
-        newTiles[1][1] = new EmptyTile();
+        final int newRoomX = DEFAULT_ROOM_X + 2;
+        final int newRoomY = DEFAULT_ROOM_Y + 3;
 
-        Room newRoom = new Room(Room.RoomType.STANDARD, newTiles); // New room with tiles
-        Coordinates newPosition = new Coordinates(newRoom, 1, 1); // New position
+        Coordinates newPosition = new Coordinates(newRoomX, newRoomY, 1, 1); // New position
         player.setPosition(newPosition);
         assertEquals(newPosition, player.getPosition(), "The position should be updated to the new position.");
     }

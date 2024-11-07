@@ -9,18 +9,18 @@ package model.enums;
  */
 public enum GameWinState {
 
+    /**
+     * Game has not been started yet.
+     */
+    NOT_STARTED,
+
     /** Indicates the player has won the game. */
-    Victory,
+    VICTORY,
 
     /** Indicates the game is currently ongoing. */
-    InProgress,
+    IN_PROGRESS,
 
     /** Indicates the player has lost the game. */
-    Failure
+    FAILURE,
 
 }
-
-
-
-
-

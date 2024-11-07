@@ -27,6 +27,29 @@ class MazeTests {
      */
     private static final Room[][] TEST_ROOMS = new Room[3][3];
 
+    /**
+     * X coordinate for the starting room for the test maze.
+     */
+    private static final int TEST_START_X = 1;
+
+    /**
+     * Y coordinate for the starting room for the test maze.
+     */
+    private static final int TEST_START_Y = 1;
+
+    /**
+     * X coordinate for the exit room for the test maze.
+     */
+    private static final int TEST_EXIT_X = 1;
+
+    /**
+     * Y coordinate for the exit room for the test maze.
+     */
+    private static final int TEST_EXIT_Y = 0;
+
+    /**
+     * Instance to use for testing.
+     */
     private Maze myMaze;
 
     /**
@@ -38,7 +61,9 @@ class MazeTests {
             Arrays.fill(row, TEST_ROOM);
         }
 
-        myMaze = new Maze(TEST_ROOMS);
+        myMaze = new Maze(TEST_ROOMS,
+                TEST_START_X, TEST_START_Y,
+                TEST_EXIT_X, TEST_EXIT_Y);
     }
 
     /**
@@ -47,12 +72,16 @@ class MazeTests {
     @Test
     void testConstructor() {
         // Zero height
-        assertThrows(IllegalArgumentException.class, () -> new Maze(new Room[0][0]),
+        assertThrows(IllegalArgumentException.class, () -> new Maze(new Room[0][0],
+                        TEST_START_X, TEST_START_Y,
+                        TEST_EXIT_X, TEST_EXIT_Y),
                 "Maze constructor did not cause an exception when given an array " +
                         "with zero height!");
 
         // Zero width
-        assertThrows(IllegalArgumentException.class, () -> new Maze(new Room[3][0]),
+        assertThrows(IllegalArgumentException.class, () -> new Maze(new Room[3][0],
+                        TEST_START_X, TEST_START_Y,
+                        TEST_EXIT_X, TEST_EXIT_Y),
                 "Maze constructor did not cause an exception when given an array " +
                         "with zero width!");
 
@@ -61,13 +90,17 @@ class MazeTests {
         tempRooms[0] = new Room[3];
         tempRooms[1] = new Room[4];
         tempRooms[2] = new Room[3];
-        assertThrows(IllegalArgumentException.class, () -> new Maze(tempRooms),
+        assertThrows(IllegalArgumentException.class, () -> new Maze(tempRooms,
+                        TEST_START_X, TEST_START_Y,
+                        TEST_EXIT_X, TEST_EXIT_Y),
                 "Maze constructor did not cause an exception when given a " +
                 "non-rectangular array!");
 
         // Double check with valid argument
-        assertDoesNotThrow(() -> new Maze(TEST_ROOMS), "Maze constructor caused" +
-                "an exception with a valid array!");
+        assertDoesNotThrow(() -> new Maze(TEST_ROOMS,
+                        TEST_START_X, TEST_START_Y,
+                        TEST_EXIT_X, TEST_EXIT_Y),
+                "Maze constructor caused an exception with a valid array!");
     }
 
     /**
@@ -79,7 +112,7 @@ class MazeTests {
                 "getRooms() did not return the expected TEST_ROOMS array!");
 
         final Room[][] tempRooms = new Room[2][2];
-        myMaze = new Maze(tempRooms);
+        myMaze = new Maze(tempRooms, 0, 0, 1, 1);
         assertEquals(tempRooms, myMaze.getRooms(),
                 "getRooms() did not return the expected array it was constructed with!");
     }
@@ -97,7 +130,9 @@ class MazeTests {
             }
         }
 
-        myMaze = new Maze(tempRooms);
+        myMaze = new Maze(tempRooms,
+                TEST_START_X, TEST_START_Y,
+                TEST_EXIT_X, TEST_EXIT_Y);
 
         for (int i = 0; i < tempRooms.length; i++) {
             for (int j = 0; j < tempRooms[0].length; j++) {
@@ -106,6 +141,32 @@ class MazeTests {
                                 "did not return the expected room!");
             }
         }
+    }
+
+    /**
+     * Test Maze's getStartingRoomX() and getStartingRoomY() methods.
+     */
+    @Test
+    void getStartingRoom() {
+        assertEquals(TEST_START_X, myMaze.getStartingRoomX());
+        assertEquals(TEST_START_Y, myMaze.getStartingRoomY());
+
+        myMaze = new Maze(TEST_ROOMS, 2, 2, 0, 0);
+        assertEquals(2, myMaze.getStartingRoomX());
+        assertEquals(2, myMaze.getStartingRoomY());
+    }
+
+    /**
+     * Test Maze's getExitRoomX() and getExitRoomY() methods.
+     */
+    @Test
+    void getExitRoom() {
+        assertEquals(TEST_EXIT_X, myMaze.getExitRoomX());
+        assertEquals(TEST_EXIT_Y, myMaze.getExitRoomY());
+
+        myMaze = new Maze(TEST_ROOMS, 2, 2, 0, 0);
+        assertEquals(0, myMaze.getExitRoomX());
+        assertEquals(0, myMaze.getExitRoomY());
     }
 
     /**
