@@ -4,37 +4,60 @@ package model;
  * Class representing coordinates within a room, including X and Y positions.
  *
  * @author Arafa Mohamed
- * @version 10/30/24
+ * @author Shane Menzies
+ * @version 11/6/24
  */
 public final class Coordinates {
 
-    /** The room associated with these coordinates. */
-    private Room myRoom;
+    /**
+     * X coordinate identifying the room.
+     */
+    private int myRoomX;
 
-    /** The x-coordinate position within the specified room. */
+    /**
+     * Y coordinate identifying the room.
+     */
+    private int myRoomY;
+
+    /**
+     * The x-coordinate position within the specified room.
+     */
     private int myX;
 
-    /** The y-coordinate position within the specified room.*/
+    /**
+     * The y-coordinate position within the specified room.
+     */
     private int myY;
 
     /**
-     * Initializes coordinates with a specified room and x, y positions.
-     * @param room the room associated with these coordinates
-     * @param x the x-coordinate
-     * @param y the y-coordinate
+     * Initializes coordinates with a specified room and x, y positions inside that room.
+     * @param theRoomX the x-coordinate for the room
+     * @param theRoomY the y-coordinate for the room
+     * @param theX the x-coordinate inside the room
+     * @param theY the y-coordinate inside the room
      */
-    public Coordinates(final Room room, final int x, final int y) {
-        myRoom = room;
-        myX = x;
-        myY = y;
+    public Coordinates(final int theRoomX, final int theRoomY,
+                       final int theX, final int theY) {
+        myRoomX = theRoomX;
+        myRoomY = theRoomY;
+        myX = theX;
+        myY = theY;
     }
 
     /**
-     * Gets the room for this coordinate.
-     * @return the room associated with these coordinates
+     * Gets the room's x-coordinate.
+     * @return Room's x-coordinate value
      */
-    public Room getRoom() {
-        return myRoom;
+    public int getRoomX() {
+        return myRoomX;
+    }
+
+    /**
+     * Gets the room's y-coordinate.
+     * @return Room's y-coordinate value
+     */
+    public int getRoomY() {
+        return myRoomY;
     }
 
     /**
@@ -55,42 +78,46 @@ public final class Coordinates {
 
     /**
      * Sets the room for this coordinate.
-     * @param room the room to set
+     * @param theRoomX New room x-coordinate
+     * @param theRoomY New room y-coordinate
      */
-    public void setRoom(final Room room) {
-        myRoom = room;
+    public void setRoom(final int theRoomX, final int theRoomY) {
+        myRoomX = theRoomX;
+        myRoomY = theRoomY;
     }
 
     /**
      * Sets the x-coordinate.
-     * @param x the x-coordinate to set
+     * @param theX the x-coordinate to set
      */
-    public void setX(final int x) {
-        myX = x;
+    public void setX(final int theX) {
+        myX = theX;
     }
 
     /**
      * Sets the y-coordinate.
-     * @param y the y-coordinate to set
+     * @param theY the y-coordinate to set
      */
-    public void setY(final int y) {
-        myY = y;
+    public void setY(final int theY) {
+        myY = theY;
     }
 
     /**
      * Checks if this coordinate is equal to another object.
-     * @param obj the object to compare
-     * @return true if both have the same coordinates and room
+     * @param theObj the object to compare
+     * @return true if both have the same coordinates
      */
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+    public boolean equals(final Object theObj) {
 
-        final Coordinates other = (Coordinates) obj;
-        return myX == other.myX &&
-                myY == other.myY &&
-                (myRoom == null ? other.myRoom == null : myRoom.equals(other.myRoom));
+        if (theObj instanceof Coordinates other) {
+            return myX == other.myX
+                    && myY == other.myY
+                    && myRoomX == other.myRoomX
+                    && myRoomY == other.myRoomY;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -99,19 +126,11 @@ public final class Coordinates {
      */
     @Override
     public int hashCode() {
-        int result = myRoom != null ? myRoom.hashCode() : 0;
+        int result = myRoomX;
+        result = 31 * result + myRoomY;
         result = 31 * result + myX;
         result = 31 * result + myY;
         return result;
     }
 
 }
-
-
-
-
-
-
-
-
-
