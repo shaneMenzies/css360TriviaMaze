@@ -10,6 +10,16 @@ package model;
 public final class Coordinates {
 
     /**
+     * Inner separator between X and Y values.
+     */
+    private static final String COORDINATE_INNER_SEPARATOR = ", ";
+
+    /**
+     * Outer seperator between Room coordinates and Tile coordinates.
+     */
+    private static final String COORDINATE_OUTER_SEPARATOR = "; ";
+
+    /**
      * X coordinate identifying the room.
      */
     private int myRoomX;
@@ -100,6 +110,18 @@ public final class Coordinates {
      */
     public void setY(final int theY) {
         myY = theY;
+    }
+
+    /**
+     * Gets a string representation of these coordinates.
+     *
+     * @return String representation of these coordinates.
+     */
+    @Override
+    public String toString() {
+        return "Room: (" + myRoomX + COORDINATE_INNER_SEPARATOR + myRoomY + ')'
+                + COORDINATE_OUTER_SEPARATOR
+                + "Tile: (" + myX + COORDINATE_INNER_SEPARATOR + myY + ')';
     }
 
     /**

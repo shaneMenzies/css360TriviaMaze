@@ -113,6 +113,21 @@ public final class Room {
     }
 
     /**
+     * Checks if X and Y coordinates are inside the bounds of this room.
+     *
+     * @param theX X coordinate to check
+     * @param theY Y coordinate to check
+     * @return True if inside the bounds of this room,
+     *          false otherwise.
+     */
+    public boolean insideBounds(final int theX, final int theY) {
+        return theX >= 0
+                && theX < getWidth()
+                && theY >= 0
+                && theY < getHeight();
+    }
+
+    /**
      * Gets this room's tile array.
      *
      * @return This room's 2D tile array.
