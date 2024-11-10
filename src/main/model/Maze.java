@@ -39,6 +39,11 @@ public class Maze {
     private final Room[][] myRooms;
 
     /**
+     * This maze's door controllers. One for each pair of doors.
+     */
+    private final DoorController[] myDoors;
+
+    /**
      * X coordinate of the starting point in the maze.
      */
     private final int myStartingRoomX;
@@ -62,13 +67,19 @@ public class Maze {
      * Constructs a Maze using the provided 2D array of Rooms.
      *
      * @param theRooms 2D Array of Rooms, must be rectangular.
+     * @param theDoors Array of DoorControllers for the doors in this maze.
+     * @param theStartX X coordinate of the starting room.
+     * @param theStartY Y coordinate of the starting room.
+     * @param theExitX X coordinate of the exit room.
+     * @param theExitY Y coordinate of the exit room.
      * @throws IllegalArgumentException If theRooms was not a rectangular array of rooms.
      */
-    public Maze(final Room[][] theRooms,
+    public Maze(final Room[][] theRooms, final DoorController[] theDoors,
                 final int theStartX, final int theStartY,
                 final int theExitX, final int theExitY)
             throws IllegalArgumentException {
         myRooms = theRooms;
+        myDoors = theDoors;
         myStartingRoomX = theStartX;
         myStartingRoomY = theStartY;
         myExitRoomX = theExitX;
@@ -85,6 +96,16 @@ public class Maze {
      */
     public Room[][] getRooms() {
         return myRooms;
+    }
+
+    /**
+     * Get's this maze's array of DoorControllers.
+     * Each one corresponds to a pair of doors in the maze.
+     *
+     * @return This maze's array of DoorControllers.
+     */
+    public DoorController[] getDoors() {
+        return myDoors;
     }
 
     /**
