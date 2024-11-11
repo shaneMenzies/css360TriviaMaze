@@ -1,8 +1,8 @@
 package model;
 
-import model.interfaces.PlayerUpdateListener;
 import java.util.ArrayList;
 import java.util.List;
+import model.interfaces.PlayerUpdateListener;
 
 /**
  * Represents a player in the game, tracking their position, score, and lives.
@@ -115,4 +115,3 @@ public final class Player {
     }
 
 }
-

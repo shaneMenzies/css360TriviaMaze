@@ -1,7 +1,7 @@
 package model.tiles;
 
-import model.Tile;
 import model.TileID;
+import model.interfaces.Tile;
 
 /**
  * A solid wall tile, impassable by the player.

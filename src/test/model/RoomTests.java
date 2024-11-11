@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.interfaces.Tile;
 import model.tiles.EmptyTile;
 import model.tiles.WallTile;
 import org.junit.jupiter.api.BeforeEach;

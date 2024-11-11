@@ -15,7 +15,7 @@ public final class Coordinates {
     private static final String COORDINATE_INNER_SEPARATOR = ", ";
 
     /**
-     * Outer seperator between Room coordinates and Tile coordinates.
+     * Outer separator between Room coordinates and Tile coordinates.
      */
     private static final String COORDINATE_OUTER_SEPARATOR = "; ";
 

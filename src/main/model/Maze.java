@@ -1,6 +1,7 @@
 package model;
 
 import model.enums.Direction;
+import model.interfaces.Tile;
 
 /**
  * Represents an entire maze consisting of a 2D array of Rooms.
@@ -99,7 +100,7 @@ public class Maze {
     }
 
     /**
-     * Get's this maze's array of DoorControllers.
+     * Gets this maze's array of DoorControllers.
      * Each one corresponds to a pair of doors in the maze.
      *
      * @return This maze's array of DoorControllers.

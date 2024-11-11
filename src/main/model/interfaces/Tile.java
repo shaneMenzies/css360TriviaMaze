@@ -1,4 +1,6 @@
-package model;
+package model.interfaces;
+
+import model.TileID;
 
 /**
  * Interface for any type of tile inside a room.

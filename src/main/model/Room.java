@@ -1,5 +1,7 @@
 package model;
 
+import model.interfaces.Tile;
+
 /**
  * Represents an entire room in a maze.
  *

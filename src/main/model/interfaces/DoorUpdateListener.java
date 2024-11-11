@@ -1,4 +1,6 @@
-package model;
+package model.interfaces;
+
+import model.DoorController;
 
 /**
  * Interface for performing an action when a DoorController updates.
