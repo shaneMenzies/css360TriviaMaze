@@ -7,6 +7,8 @@ import model.enums.GamePlayPhase;
 import model.interfaces.GameStateUpdateListener;
 import model.interfaces.QuestionControllerUpdateListener;
 
+import static model.interfaces.QuestionControllerUpdateListener.UpdateType.*;
+
 /**
  * Represents the entire state of a game being played.
  *
@@ -14,6 +16,12 @@ import model.interfaces.QuestionControllerUpdateListener;
  * @version 11/10/24
  */
 public final class GameState {
+
+    /**
+     * String for an exception caused by an invalid update type.
+     */
+    private static final String INVALID_UPDATE_TYPE_MESSAGE = "QuestionController " +
+            "updated GameState with invalid UpdateType!";
 
     /**
      * Settings for this game.
@@ -145,6 +153,11 @@ public final class GameState {
         if (!newPos.equals(oldPos)) {
             if (myMaze.getTile(newPos).tryMoveTo()) {
                 myPlayer.setPosition(newPos);
+
+                if (oldPos.getRoomX() != newPos.getRoomX()
+                    || oldPos.getRoomY() != newPos.getRoomY()) {
+                    onRoomChange(newPos.getRoomX(), newPos.getRoomY());
+                }
             }
         }
 
@@ -172,6 +185,19 @@ public final class GameState {
     }
 
     /**
+     * Performs necessary actions when the player changes rooms.
+     *
+     * @param theNewRoomX X-coordinate of the new room.
+     * @param theNewRoomY Y-coordinate of the new room.
+     */
+    private void onRoomChange(final int theNewRoomX, final int theNewRoomY) {
+        if (theNewRoomX == myMaze.getExitRoomX()
+            && theNewRoomY == myMaze.getExitRoomY()) {
+            setPhase(GamePlayPhase.VICTORY);
+        }
+    }
+
+    /**
      * Updates all listeners for a certain update.
      *
      * @param theUpdateType Type of update.
@@ -185,14 +211,37 @@ public final class GameState {
     /**
      * Handles an update from the QuestionController.
      *
-     * @param theUpdated The QuestionController which updated.
+     * @param theUpdateType The type of update in the QuestionController.
      */
-    private void handleQuestionControllerUpdate(final QuestionController theUpdated) {
-        if (theUpdated.hasQuestion()) {
-            myStoredPhase = myPlayPhase;
-            setPhase(GamePlayPhase.TRIVIA);
-        } else {
-            setPhase(myStoredPhase);
+    private void handleQuestionControllerUpdate(
+            final QuestionControllerUpdateListener.UpdateType theUpdateType) {
+        switch (theUpdateType) {
+            case NEW_QUESTION:
+                myStoredPhase = myPlayPhase;
+                setPhase(GamePlayPhase.TRIVIA);
+                break;
+
+            case ANSWERED_CORRECTLY:
+                myPlayer.setScore(myPlayer.getScore() + mySettings.getCorrectAnswerScore());
+                setPhase(myStoredPhase);
+                break;
+
+            case ANSWERED_INCORRECTLY:
+                myPlayer.setScore(myPlayer.getScore() + mySettings.getWrongAnswerScore());
+                myPlayer.setLives(myPlayer.getLives() - 1);
+                if (myPlayer.getLives() == 0) {
+                    setPhase(GamePlayPhase.FAILURE);
+                } else {
+                    setPhase(myStoredPhase);
+                }
+                break;
+
+            case CANCELLED:
+                setPhase(myStoredPhase);
+                break;
+
+            default:
+                throw new IllegalArgumentException(INVALID_UPDATE_TYPE_MESSAGE);
         }
     }
 
@@ -203,8 +252,10 @@ public final class GameState {
     private final class QuestionControllerListener
             implements QuestionControllerUpdateListener {
         @Override
-        public void doUpdate(final QuestionController theQuestionController) {
-            handleQuestionControllerUpdate(theQuestionController);
+        public void doUpdate(
+                final QuestionControllerUpdateListener.UpdateType theUpdateType,
+                final QuestionController theQuestionController) {
+            handleQuestionControllerUpdate(theUpdateType);
         }
     }
 }

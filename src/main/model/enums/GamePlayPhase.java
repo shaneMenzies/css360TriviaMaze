@@ -5,7 +5,7 @@ package model.enums;
  *
  * @author Arafa Mohamed
  * @author Shane Menzies
- * @version 10/26/24
+ * @version 11/14/24
  */
 public enum GamePlayPhase {
 
@@ -18,6 +18,11 @@ public enum GamePlayPhase {
      * Indicates the game is in the normal progress phase.
      */
     IN_PROGRESS,
+
+    /**
+     * Indicates the game is paused.
+     */
+    PAUSED,
 
     /**
      * Player is answering a question.

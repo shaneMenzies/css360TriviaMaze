@@ -4,6 +4,11 @@ import model.GameState;
 
 public interface GameStateUpdateListener {
 
+    /**
+     * Performs some action when the GameState updates.
+     * @param theUpdateType Type of change in the GameState.
+     * @param theGameState GameState which changed.
+     */
     void doUpdate(UpdateType theUpdateType, GameState theGameState);
 
     /**
