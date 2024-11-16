@@ -33,7 +33,7 @@ class QuestionControllerTests {
     private final QuestionControllerUpdateListener myControllerUpdateListener =
             new QuestionControllerUpdateListener() {
                 @Override
-                public void doUpdate(final QuestionController theQuestionController) {
+                public void doUpdate(final UpdateType theType, final QuestionController theQuestionController) {
                     myUpdateCount++;
                 }
             };
@@ -151,13 +151,13 @@ class QuestionControllerTests {
         assertNull(myLastResult, "Callback shouldn't have been called yet!");
 
         myController.answerQuestion(TEST_QUESTION.getAnswer());
-        assertEquals(myLastResult, QuestionHandler.QuestionResult.CORRECT,
+        assertEquals(QuestionHandler.QuestionResult.CORRECT, myLastResult,
                 "Callback got " + myLastResult + " instead of CORRECT!");
 
         assertDoesNotThrow(() -> myController.askQuestion(TEST_QUESTION, myAnswerCallback));
 
         myController.answerQuestion(INCORRECT_ANSWER);
-        assertEquals(myLastResult, QuestionHandler.QuestionResult.INCORRECT,
+        assertEquals(QuestionHandler.QuestionResult.INCORRECT, myLastResult,
                 "Callback got " + myLastResult + " instead of INCORRECT!");
     }
 
@@ -171,7 +171,7 @@ class QuestionControllerTests {
         assertNull(myLastResult, "Callback shouldn't have been called yet!");
 
         myController.cancelQuestion();
-        assertEquals(myLastResult, QuestionHandler.QuestionResult.CANCELLED,
+        assertEquals(QuestionHandler.QuestionResult.CANCELLED, myLastResult,
                 "Callback got " + myLastResult + " instead of CANCELLED!");
     }
 }

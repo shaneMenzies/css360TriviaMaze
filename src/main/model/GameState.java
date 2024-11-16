@@ -6,8 +6,8 @@ import model.enums.Direction;
 import model.enums.GamePlayPhase;
 import model.interfaces.GameStateUpdateListener;
 import model.interfaces.QuestionControllerUpdateListener;
+import model.interfaces.QuestionHandler;
 
-import static model.interfaces.QuestionControllerUpdateListener.UpdateType.*;
 
 /**
  * Represents the entire state of a game being played.
@@ -20,8 +20,8 @@ public final class GameState {
     /**
      * String for an exception caused by an invalid update type.
      */
-    private static final String INVALID_UPDATE_TYPE_MESSAGE = "QuestionController " +
-            "updated GameState with invalid UpdateType!";
+    private static final String INVALID_UPDATE_TYPE_MESSAGE = "QuestionController "
+            + "updated GameState with invalid UpdateType!";
 
     /**
      * Settings for this game.
@@ -73,8 +73,10 @@ public final class GameState {
         // Make and link the question controller.
         myQuestionController = new QuestionController();
         myQuestionController.addListener(new QuestionControllerListener());
-        for (final DoorController nextDoor : myMaze.getDoors()) {
-            nextDoor.setHandler(myQuestionController);
+        if (myMaze.getDoors() != null) {
+            for (final DoorController nextDoor : myMaze.getDoors()) {
+                nextDoor.setHandler(myQuestionController);
+            }
         }
 
         myListeners = new ArrayList<>();
@@ -98,6 +100,25 @@ public final class GameState {
      */
     public Player getPlayer() {
         return myPlayer;
+    }
+
+    /**
+     * Gets the current question in the game.
+     *
+     * @return Current trivia question.
+     */
+    public TriviaQuestion getQuestion() {
+        return myQuestionController.getQuestion();
+    }
+
+    /**
+     * Provide an answer to the current question.
+     *
+     * @param theInput Answer to judge.
+     * @return Result of question with provided answer.
+     */
+    public QuestionHandler.QuestionResult answerQuestion(final String theInput) {
+        return myQuestionController.answerQuestion(theInput);
     }
 
     /**

@@ -215,6 +215,11 @@ public final class DoorController {
                 case OPEN -> TileID.DOOR_OPEN;
             };
         }
+
+        @Override
+        public String toString() {
+            return "X";
+        }
     }
 
     private final class DoorAnswerCallback implements QuestionHandler.AnswerCallback {

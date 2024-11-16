@@ -26,4 +26,9 @@ public final class WallTile implements Tile {
     public TileID getTileID() {
         return TileID.WALL;
     }
+
+    @Override
+    public String toString() {
+        return "▮";
+    }
 }

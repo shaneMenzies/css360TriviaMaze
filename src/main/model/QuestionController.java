@@ -71,7 +71,7 @@ public final class QuestionController implements QuestionHandler {
             myQuestion = theQuestion;
             myAnswerCallback = theCallback;
 
-            updateListeners();
+            updateListeners(QuestionControllerUpdateListener.UpdateType.NEW_QUESTION);
         }
     }
 
@@ -117,14 +117,20 @@ public final class QuestionController implements QuestionHandler {
      * Provides an answer to the active question.
      *
      * @param theInput Answer to provide and judge.
+     * @return QuestionResult of the provided answer.
      */
-    public void answerQuestion(final String theInput) {
+    public QuestionResult answerQuestion(final String theInput) {
         // TODO: More advanced question grading logic.
+        QuestionResult result;
+
         if (theInput.equals(myQuestion.getAnswer())) {
-            resolveQuestion(QuestionResult.CORRECT);
+            result = QuestionResult.CORRECT;
         } else {
-            resolveQuestion(QuestionResult.INCORRECT);
+            result = QuestionResult.INCORRECT;
         }
+
+        resolveQuestion(result);
+        return result;
     }
 
     /**
@@ -137,9 +143,9 @@ public final class QuestionController implements QuestionHandler {
     /**
      * Updates this QuestionController's listeners.
      */
-    private void updateListeners() {
+    private void updateListeners(final QuestionControllerUpdateListener.UpdateType theType) {
         for (final QuestionControllerUpdateListener listener : myListeners) {
-            listener.doUpdate(this);
+            listener.doUpdate(theType, this);
         }
     }
 
@@ -156,6 +162,16 @@ public final class QuestionController implements QuestionHandler {
         myQuestion = null;
         myAnswerCallback = null;
 
-        updateListeners();
+        QuestionControllerUpdateListener.UpdateType resultType =
+                switch (theResult) {
+                    case CORRECT ->
+                            QuestionControllerUpdateListener.UpdateType.ANSWERED_CORRECTLY;
+                    case INCORRECT ->
+                            QuestionControllerUpdateListener.UpdateType.ANSWERED_INCORRECTLY;
+                    case CANCELLED ->
+                            QuestionControllerUpdateListener.UpdateType.CANCELLED;
+                };
+
+        updateListeners(resultType);
     }
 }

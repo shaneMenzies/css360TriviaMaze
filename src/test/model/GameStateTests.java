@@ -1,12 +1,15 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import model.enums.Direction;
 import model.enums.GamePlayPhase;
 import model.interfaces.GameStateUpdateListener;
-import model.interfaces.Tile;
-import model.tiles.EmptyTile;
+import model.interfaces.QuestionHandler;
+import model.utilities.EmptyMazeGenerator;
+import model.utilities.RealisticSquareMazeGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,16 +27,9 @@ class GameStateTests {
     private static final int TEST_ROOM_SIZE = 3;
 
     /**
-     * Tiles for each room.
+     * Size of the test maze.
      */
-    private static final Tile[][] TEST_ROOM_CONTENTS
-            = new Tile[3][3];
-
-    /**
-     * Basic room for testing.
-     */
-    private static final Room TEST_ROOM
-            = new Room(Room.RoomType.STANDARD, TEST_ROOM_CONTENTS);
+    private static final int TEST_MAZE_SIZE = 3;
 
     /**
      * GameSettings for testing.
@@ -42,19 +38,14 @@ class GameStateTests {
             = new GameSettings(3, 100, -100);
 
     /**
-     * Size of the test maze.
+     * Question for testing.
      */
-    private static final int TEST_MAZE_SIZE = 3;
-
-    /**
-     * Rooms for the Maze.
-     */
-    private static final Room[][] TEST_ROOMS = new Room[TEST_MAZE_SIZE][TEST_MAZE_SIZE];
-
-    /**
-     * Basic DoorController array for testing.
-     */
-    private static final DoorController[] TEST_DOORS = new DoorController[3];
+    private static final TriviaQuestion TEST_QUESTION
+            = new TriviaQuestion(
+                    "Test Question",
+                    "Correct Answer",
+                    TriviaQuestion.QuestionType.SHORT_ANSWER
+            );
 
     /**
      * Starting room's X coordinate.
@@ -113,25 +104,13 @@ class GameStateTests {
      */
     @BeforeEach
     void setUp() {
-        // Setup rooms
-        for (int i = 0; i < TEST_ROOM_SIZE; i++) {
-            for (int j = 0; j < TEST_ROOM_SIZE; j++) {
-                TEST_ROOM_CONTENTS[i][j] = new EmptyTile();
-            }
-        }
-
-        for (int i = 0; i < TEST_MAZE_SIZE; i++) {
-            for (int j = 0; j < TEST_MAZE_SIZE; j++) {
-                TEST_ROOMS[i][j] = new Room(TEST_ROOM);
-            }
-        }
-
-        // Setup maze
-        myMaze = new Maze(
-                    TEST_ROOMS, TEST_DOORS,
-                    TEST_START_X, TEST_START_Y,
-                    TEST_EXIT_X, TEST_EXIT_Y
-                );
+        // Setup Maze
+        final EmptyMazeGenerator emptyMazeGenerator = new EmptyMazeGenerator(
+                TEST_MAZE_SIZE, TEST_ROOM_SIZE,
+                TEST_START_X, TEST_START_Y,
+                TEST_EXIT_X, TEST_EXIT_Y
+        );
+        myMaze = emptyMazeGenerator.generate();
 
         // Setup GameState
         myGameState = new GameState(TEST_SETTINGS, myMaze);
@@ -157,7 +136,7 @@ class GameStateTests {
         final Coordinates expectedCoordinates =
                 new Coordinates(
                         TEST_START_X, TEST_START_Y,
-                        TEST_ROOM.getWidth() / 2, TEST_ROOM.getWidth() / 2
+                        TEST_ROOM_SIZE / 2, TEST_ROOM_SIZE / 2
                 );
 
         final Player received = myGameState.getPlayer();
@@ -200,7 +179,7 @@ class GameStateTests {
                 "Failed to remove the previously added update listener!");
 
         myGameState.setPhase(GamePlayPhase.PAUSED);
-        assertEquals(myUpdateCount, 0,
+        assertEquals(0, myUpdateCount,
                 "GameState updated listener that should have been " +
                         "removed!");
     }
@@ -262,11 +241,201 @@ class GameStateTests {
     }
 
     /**
-     * Tests that doors work correctly inside GameState.
+     * Helper method that generates myMaze using a realistic
+     * maze generator.
+     */
+    void makeRealisticMaze() {
+        final RealisticSquareMazeGenerator realisticMazeGenerator = new RealisticSquareMazeGenerator(
+                TEST_MAZE_SIZE, TEST_ROOM_SIZE,
+                TEST_START_X, TEST_START_Y,
+                TEST_EXIT_X, TEST_EXIT_Y,
+                TEST_QUESTION
+        );
+        myMaze = realisticMazeGenerator.generate();
+    }
+
+    /**
+     * Tests that doors work correctly (when given a correct answer) inside GameState.
      */
     @Test
-    void testDoors() {
+    void testDoorCorrectAnswer() {
+        makeRealisticMaze();
+        myGameState.addUpdateListener(myTestListener);
 
+        assertEquals(0, myUpdateCount,
+                "Unexpected updates sent to update listener!");
+
+        Coordinates initialCoordinates = myGameState.getPlayer().getPosition();
+
+        // Move player up to door.
+        final int spacesToMove = TEST_ROOM_SIZE / 2;
+        for (int i = 0; i < spacesToMove; i++) {
+            myGameState.movePlayer(Direction.UP);
+        }
+
+        // Player should have been stopped just before the door.
+        Coordinates expectedCoordinates = new Coordinates(
+                initialCoordinates.getRoomX(),
+                initialCoordinates.getRoomY(),
+                initialCoordinates.getX(),
+                initialCoordinates.getY() + spacesToMove - 1
+        );
+        Coordinates receivedCoordinates = myGameState.getPlayer().getPosition();
+        System.out.println(myGameState.getMaze().getTile(receivedCoordinates).getClass());
+        assertEquals(expectedCoordinates, receivedCoordinates,
+                "Found player at " + receivedCoordinates + "! Expected "
+                        + expectedCoordinates);
+
+
+        // GamePlayPhase should have changed to Trivia
+        assertEquals(GamePlayPhase.TRIVIA, myGameState.getPhase(),
+                "GameState phase didn't change to Trivia mode when expected!");
+        assertSame(TEST_QUESTION, myGameState.getQuestion(),
+                "GameState returned a different question than expected!");
+
+        // Try correct answer
+        assertEquals(QuestionHandler.QuestionResult.CORRECT,
+                myGameState.answerQuestion(TEST_QUESTION.getAnswer()),
+                "GameState.answerQuestion didn't recognize correct answer"
+                        + " as being correct!");
+
+        // Player should now be able to move up correctly
+        initialCoordinates = myGameState.getPlayer().getPosition();
+        expectedCoordinates = new Coordinates(
+                initialCoordinates.getRoomX(),
+                initialCoordinates.getRoomY(),
+                initialCoordinates.getX(),
+                initialCoordinates.getY() + 1
+        );
+
+        myGameState.movePlayer(Direction.UP);
+
+        receivedCoordinates = myGameState.getPlayer().getPosition();
+        assertEquals(expectedCoordinates, receivedCoordinates,
+                "Found player at " + receivedCoordinates + "! Expected "
+                        + expectedCoordinates);
+    }
+
+    /**
+     * Tests that doors work correctly (when given an incorrect answer) inside GameState.
+     */
+    @Test
+    void testDoorIncorrectAnswer() {
+        makeRealisticMaze();
+        myGameState.addUpdateListener(myTestListener);
+
+        assertEquals(0, myUpdateCount,
+                "Unexpected updates sent to update listener!");
+
+        Coordinates initialCoordinates = myGameState.getPlayer().getPosition();
+
+        // Move player up to door.
+        final int spacesToMove = TEST_ROOM_SIZE / 2;
+        for (int i = 0; i < spacesToMove; i++) {
+            myGameState.movePlayer(Direction.UP);
+        }
+
+        // Player should have been stopped just before the door.
+        Coordinates expectedCoordinates = new Coordinates(
+                initialCoordinates.getRoomX(),
+                initialCoordinates.getRoomY(),
+                initialCoordinates.getX(),
+                initialCoordinates.getY() + spacesToMove - 1
+        );
+        Coordinates receivedCoordinates = myGameState.getPlayer().getPosition();
+        assertEquals(expectedCoordinates, receivedCoordinates,
+                "Found player at " + receivedCoordinates + "! Expected "
+                        + expectedCoordinates);
+
+
+        // GamePlayPhase should have changed to Trivia
+        assertEquals(GamePlayPhase.TRIVIA, myGameState.getPhase(),
+                "GameState phase didn't change to Trivia mode when expected!");
+        assertSame(TEST_QUESTION, myGameState.getQuestion(),
+                "GameState returned a different question than expected!");
+
+        // Try correct answer
+        assertEquals(QuestionHandler.QuestionResult.CORRECT,
+                myGameState.answerQuestion(TEST_QUESTION.getAnswer()),
+                "GameState.answerQuestion didn't recognize correct answer"
+                        + " as being correct!");
+
+        // Player should now be able to move up correctly
+        initialCoordinates = myGameState.getPlayer().getPosition();
+        expectedCoordinates = new Coordinates(
+                initialCoordinates.getRoomX(),
+                initialCoordinates.getRoomY(),
+                initialCoordinates.getX(),
+                initialCoordinates.getY() + 1
+        );
+
+        myGameState.movePlayer(Direction.UP);
+
+        receivedCoordinates = myGameState.getPlayer().getPosition();
+        assertEquals(expectedCoordinates, receivedCoordinates,
+                "Found player at " + receivedCoordinates + "! Expected "
+                        + expectedCoordinates);
+    }
+
+    /**
+     * Tests that doors work correctly (when cancelled) inside GameState.
+     */
+    @Test
+    void testDoorCancel() {
+        makeRealisticMaze();
+        myGameState.addUpdateListener(myTestListener);
+
+        assertEquals(0, myUpdateCount,
+                "Unexpected updates sent to update listener!");
+
+        Coordinates initialCoordinates = myGameState.getPlayer().getPosition();
+
+        // Move player up to door.
+        final int spacesToMove = TEST_ROOM_SIZE / 2;
+        for (int i = 0; i < spacesToMove; i++) {
+            myGameState.movePlayer(Direction.UP);
+        }
+
+        // Player should have been stopped just before the door.
+        Coordinates expectedCoordinates = new Coordinates(
+                initialCoordinates.getRoomX(),
+                initialCoordinates.getRoomY(),
+                initialCoordinates.getX(),
+                initialCoordinates.getY() + spacesToMove - 1
+        );
+        Coordinates receivedCoordinates = myGameState.getPlayer().getPosition();
+        assertEquals(expectedCoordinates, receivedCoordinates,
+                "Found player at " + receivedCoordinates + "! Expected "
+                        + expectedCoordinates);
+
+
+        // GamePlayPhase should have changed to Trivia
+        assertEquals(GamePlayPhase.TRIVIA, myGameState.getPhase(),
+                "GameState phase didn't change to Trivia mode when expected!");
+        assertSame(TEST_QUESTION, myGameState.getQuestion(),
+                "GameState returned a different question than expected!");
+
+        // Try correct answer
+        assertEquals(QuestionHandler.QuestionResult.CORRECT,
+                myGameState.answerQuestion(TEST_QUESTION.getAnswer()),
+                "GameState.answerQuestion didn't recognize correct answer"
+                        + " as being correct!");
+
+        // Player should now be able to move up correctly
+        initialCoordinates = myGameState.getPlayer().getPosition();
+        expectedCoordinates = new Coordinates(
+                initialCoordinates.getRoomX(),
+                initialCoordinates.getRoomY(),
+                initialCoordinates.getX(),
+                initialCoordinates.getY() + 1
+        );
+
+        myGameState.movePlayer(Direction.UP);
+
+        receivedCoordinates = myGameState.getPlayer().getPosition();
+        assertEquals(expectedCoordinates, receivedCoordinates,
+                "Found player at " + receivedCoordinates + "! Expected "
+                        + expectedCoordinates);
     }
 
     /**

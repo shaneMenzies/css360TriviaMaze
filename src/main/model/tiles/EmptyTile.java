@@ -26,4 +26,9 @@ public final class EmptyTile implements Tile {
     public TileID getTileID() {
         return TileID.EMPTY;
     }
+
+    @Override
+    public String toString() {
+        return " ";
+    }
 }

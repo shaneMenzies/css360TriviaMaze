@@ -62,5 +62,6 @@ public interface QuestionHandler {
          * Cancelled the question.
          */
         CANCELLED,
+
     }
 }
