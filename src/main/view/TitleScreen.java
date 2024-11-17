@@ -102,7 +102,7 @@ public class TitleScreen extends JFrame {
         myTitleWindow.setLocation(700, 200);
         myTitleWindow.setSize(558, 732);
         myTitleWindow.setResizable(false);
-        myTitleWindow.setTitle("Level Up");
+        myTitleWindow.setTitle("Level Up (A Trivia Maze)");
         myTitleWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         myTitleWindow.setVisible(true);
@@ -122,7 +122,7 @@ public class TitleScreen extends JFrame {
      */
     private void moveTitle() {
         final Timer titleScreenTimer = new Timer(40, new ActionListener() {
-            boolean myMovingUp = true;
+            private boolean myMovingUp = true;
 
             @Override
             public void actionPerformed(final ActionEvent theException) {
