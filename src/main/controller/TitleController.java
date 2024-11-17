@@ -1,9 +1,9 @@
 package controller;
 
-import view.TitleScreen;
-import view.GameplayScreen;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import view.GameplayScreen;
+import view.TitleScreen;
 
 /**
  * The controller for the title screen. It listens to the action on the "Play" and
@@ -19,7 +19,7 @@ public class TitleController implements ActionListener {
      *
      * @param theView title screen view object where buttons are displayed.
      */
-    public TitleController(TitleScreen theView) {
+    public TitleController(final TitleScreen theView) {
         theView.getStartButton().addActionListener(new StartButtonListener(theView));
         theView.getExitButton().addActionListener(new ExitButtonListener());
     }
@@ -27,10 +27,10 @@ public class TitleController implements ActionListener {
     /**
      * To allow TitleController to not be declared as abstract.
      *
-     * @param e the event to be processed
+     * @param theException the event to be processed
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent theException) {
         // no actions needed here.
     }
 
@@ -48,16 +48,16 @@ public class TitleController implements ActionListener {
          * @param theEvent the event to be processed.
          */
         @Override
-            public void actionPerformed(ActionEvent theEvent) {
-                new GameplayScreen();
-                titleScreen.disposeTitleWindow();
-            }
+        public void actionPerformed(final ActionEvent theEvent) {
+            new GameplayScreen();
+            titleScreen.disposeTitleWindow();
         }
+    }
 
     /**
      * Handles the event when the exit button is pressed. It closes the application.
      */
-    private static class ExitButtonListener implements ActionListener {
+    private static final class ExitButtonListener implements ActionListener {
 
         /**
          * Closes the application.
@@ -65,7 +65,7 @@ public class TitleController implements ActionListener {
          * @param theEvent the event to be processed.
          */
         @Override
-        public void actionPerformed(ActionEvent theEvent) {
+        public void actionPerformed(final ActionEvent theEvent) {
             System.exit(0);
         }
     }
