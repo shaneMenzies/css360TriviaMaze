@@ -1,6 +1,5 @@
 package model;
 
-
 import model.interfaces.PlayerUpdateListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

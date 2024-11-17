@@ -1,12 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Represents an entire maze consisting of a 2D array of Rooms.
  *
  * @author Shane Menzies
  * @version 11/2/24
  */
-public class Maze {
+public class Maze implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Exception message for an invalid rooms array with height of 0.

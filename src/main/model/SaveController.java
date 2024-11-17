@@ -6,7 +6,7 @@ import java.io.*;
  * SaveController is responsible for saving and loading game state to and from a specified file.
  *
  * @author Arafa Mohamed
- * @version 11/06/24
+ * @version 11/13/24
  */
 public final class SaveController {
 
@@ -44,8 +44,11 @@ public final class SaveController {
      * @throws RuntimeException if the game state cannot be loaded
      */
     public GameState loadGame() {
-        try (ObjectInputStream ois = new ObjectInputStream(
-                new FileInputStream(mySaveLocation))) {
+        File file = new File(mySaveLocation);
+        if (!file.exists() || file.length() == 0) {
+            throw new RuntimeException("Failed to load game: save file is empty or does not exist");
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(mySaveLocation))) {
             return (GameState) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("Failed to load game: " + e.getMessage());
@@ -53,8 +56,6 @@ public final class SaveController {
     }
 
 }
-
-
 
 
 
