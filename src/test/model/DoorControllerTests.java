@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.enums.TileID;
 import model.interfaces.DoorUpdateListener;
 import model.interfaces.QuestionHandler;
 import org.junit.jupiter.api.BeforeEach;

@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import model.enums.TileID;
 import model.interfaces.DoorUpdateListener;
 import model.interfaces.QuestionHandler;
 import model.interfaces.Tile;

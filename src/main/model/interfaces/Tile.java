@@ -1,6 +1,6 @@
 package model.interfaces;
 
-import model.TileID;
+import model.enums.TileID;
 
 /**
  * Interface for any type of tile inside a room.

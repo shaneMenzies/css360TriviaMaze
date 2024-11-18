@@ -1,4 +1,4 @@
-package model;
+package model.enums;
 
 /**
  * ID enumeration for each type of tile to associate itself with

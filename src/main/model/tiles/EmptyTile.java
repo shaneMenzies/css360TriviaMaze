@@ -1,6 +1,6 @@
 package model.tiles;
 
-import model.TileID;
+import model.enums.TileID;
 import model.interfaces.Tile;
 
 /**

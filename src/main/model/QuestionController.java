@@ -121,7 +121,7 @@ public final class QuestionController implements QuestionHandler {
      */
     public QuestionResult answerQuestion(final String theInput) {
         // TODO: More advanced question grading logic.
-        QuestionResult result;
+        final QuestionResult result;
 
         if (theInput.equals(myQuestion.getAnswer())) {
             result = QuestionResult.CORRECT;
@@ -162,15 +162,15 @@ public final class QuestionController implements QuestionHandler {
         myQuestion = null;
         myAnswerCallback = null;
 
-        QuestionControllerUpdateListener.UpdateType resultType =
-                switch (theResult) {
-                    case CORRECT ->
-                            QuestionControllerUpdateListener.UpdateType.ANSWERED_CORRECTLY;
-                    case INCORRECT ->
-                            QuestionControllerUpdateListener.UpdateType.ANSWERED_INCORRECTLY;
-                    case CANCELLED ->
-                            QuestionControllerUpdateListener.UpdateType.CANCELLED;
-                };
+        final QuestionControllerUpdateListener.UpdateType resultType
+            = switch (theResult) {
+            case CORRECT:
+                yield QuestionControllerUpdateListener.UpdateType.ANSWERED_CORRECTLY;
+            case INCORRECT:
+                yield QuestionControllerUpdateListener.UpdateType.ANSWERED_INCORRECTLY;
+            case CANCELLED:
+                yield QuestionControllerUpdateListener.UpdateType.CANCELLED;
+        };
 
         updateListeners(resultType);
     }
