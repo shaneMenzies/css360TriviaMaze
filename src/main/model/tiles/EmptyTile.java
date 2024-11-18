@@ -3,16 +3,13 @@ package model.tiles;
 import model.Tile;
 import model.TileID;
 
-import java.io.Serializable;
-
 /**
  * An empty tile.
  *
  * @author Shane Menzies
  * @version 10/25/24
  */
-public final class EmptyTile implements Tile, Serializable {
-    private static final long serialVersionUID = 1L;
+public final class EmptyTile implements Tile {
 
     /**
      * Constructs a new Empty Tile.
