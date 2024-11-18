@@ -167,6 +167,11 @@ public final class GameState {
      */
     public void movePlayer(final Direction theDirection) {
 
+        if (myPlayPhase == GamePlayPhase.TRIVIA) {
+            // Cancel active question
+            myQuestionController.cancelQuestion();
+        }
+
         final Coordinates oldPos = myPlayer.getPosition();
         final Coordinates newPos = myMaze.moveCoordinates(oldPos, theDirection);
 

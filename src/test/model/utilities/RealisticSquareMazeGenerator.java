@@ -61,11 +61,6 @@ public class RealisticSquareMazeGenerator implements MazeGenerator {
     private Tile[][][][] myTiles;
 
     /**
-     * Array for Rooms inside the maze.
-     */
-    private Room[][] myRooms;
-
-    /**
      * List of DoorControllers for room doors.
      */
     private List<DoorController> myDoors;
@@ -102,15 +97,12 @@ public class RealisticSquareMazeGenerator implements MazeGenerator {
     public Maze generate() {
 
         // Make room and tile arrays
-        myRooms = new Room[myMazeSize][myMazeSize];
+        final Room[][] myRooms = new Room[myMazeSize][myMazeSize];
         myTiles = new Tile[myMazeSize][myMazeSize][myRoomSize][myRoomSize];
         myDoors = new ArrayList<>();
 
-        // Edge borders
-        makeMazeBorders();
-
         // Internal Room borders
-        makeRoomBorders();
+        makeAllRoomBorders();
 
         // Create rooms from prepared tiles.
         for (int i = 0; i < myMazeSize; i++) {
@@ -137,53 +129,15 @@ public class RealisticSquareMazeGenerator implements MazeGenerator {
     }
 
     /**
-     * Makes the exterior maze borders.
-     */
-    private void makeMazeBorders() {
-        for (int x = 0; x < myMazeSize * myRoomSize; x++) {
-            myTiles[0][x / myRoomSize]
-                    [0][x % myRoomSize]
-                    = new WallTile();
-            myTiles[myMazeSize - 1][x / myRoomSize]
-                    [myMazeSize - 1][x % myRoomSize]
-                    = new WallTile();
-        }
-        for (int y = 0; y < myMazeSize * myRoomSize; y++) {
-            myTiles[y / myRoomSize][0]
-                    [y % myRoomSize][0]
-                    = new WallTile();
-            myTiles[y / myRoomSize][myMazeSize - 1]
-                    [y % myRoomSize][myMazeSize - 1]
-                    = new WallTile();
-        }
-    }
-
-    /**
      * Makes the necessary borders for all the rooms in the maze.
      */
-    private void makeRoomBorders() {
-        int roomY = 0;
-        int roomX = 0;
-        for (roomY = 0; roomY < (myMazeSize - 1); roomY++) {
-            for (roomX = 0; roomX < (myMazeSize - 1); roomX++) {
+    private void makeAllRoomBorders() {
+        for (int roomY = 0; roomY < myMazeSize; roomY++) {
+            for (int roomX = 0; roomX < myMazeSize; roomX++) {
                 fillRoomInterior(roomX, roomY);
-                makeRoomRightBorder(roomX, roomY);
-                makeRoomTopBorder(roomX, roomY);
+                makeRoomBorders(roomX, roomY);
             }
-
-            // Last in row only needs top edge
-            fillRoomInterior(roomX, roomY);
-            makeRoomTopBorder(roomX, roomY);
         }
-
-        // Last row doesn't need top borders
-        for (roomX = 0; roomX < (myMazeSize - 1); roomX++) {
-            fillRoomInterior(roomX, roomY);
-            makeRoomRightBorder(roomX, roomY);
-        }
-
-        // Very last one only needs the interior
-        fillRoomInterior(roomX, roomY);
     }
 
     /**
@@ -201,51 +155,69 @@ public class RealisticSquareMazeGenerator implements MazeGenerator {
         }
     }
 
-    /**
-     * Makes the right border for a room.
-     *
-     * @param theRoomX X-coordinate of the room.
-     * @param theRoomY Y-coordinate of the room.
-     */
-    private void makeRoomRightBorder(final int theRoomX, final int theRoomY) {
-        // Right border
+    private void makeRoomBorders(final int theRoomX, final int theRoomY) {
+        // Right and Left
         for (int y = 0; y < myRoomSize; y++) {
             if (y != myDoorIndex) {
+                myTiles[theRoomY][theRoomX][y][0]
+                        = new WallTile();
                 myTiles[theRoomY][theRoomX][y][myRoomSize - 1]
                         = new WallTile();
             }
         }
 
-        // Right door
-        final DoorController rightDoor = new DoorController(myQuestion);
-        myDoors.add(rightDoor);
-        myTiles[theRoomY][theRoomX][myDoorIndex][myRoomSize - 1]
-                = rightDoor.getDoors()[0];
-        myTiles[theRoomY][theRoomX + 1][myDoorIndex][0]
-                = rightDoor.getDoors()[1];
-    }
-
-    /**
-     * Makes the top border for a room.
-     *
-     * @param theRoomX X-coordinate of the room.
-     * @param theRoomY Y-coordinate of the room.
-     */
-    private void makeRoomTopBorder(final int theRoomX, final int theRoomY) {
+        // Top and Bottom
         for (int x = 0; x < myRoomSize; x++) {
             if (x != myDoorIndex) {
+                myTiles[theRoomY][theRoomX][0][x]
+                        = new WallTile();
                 myTiles[theRoomY][theRoomX][myRoomSize - 1][x]
                         = new WallTile();
             }
         }
 
+        // Need to fill bottom and left edges if this room has no neighbors
+        // in those directions.
+        if (theRoomY == 0) {
+            // No bottom door
+            myTiles[theRoomY][theRoomX][0][myDoorIndex]
+                    = new WallTile();
+        }
+        if (theRoomX == 0) {
+            // No left door
+            myTiles[theRoomY][theRoomX][myDoorIndex][0]
+                    = new WallTile();
+        }
+
         // Top door
-        final DoorController topDoor = new DoorController(myQuestion);
-        myDoors.add(topDoor);
-        myTiles[theRoomY][theRoomX][myRoomSize - 1][myDoorIndex]
-                = topDoor.getDoors()[0];
-        myTiles[theRoomY + 1][theRoomX][0][myDoorIndex]
-                = topDoor.getDoors()[1];
+        if (theRoomY == (myMazeSize - 1)) {
+           // No top door
+           myTiles[theRoomY][theRoomX][myRoomSize - 1][myDoorIndex]
+                   = new WallTile();
+        } else {
+            // Make a top door
+            final DoorController topDoor = new DoorController(myQuestion);
+            myDoors.add(topDoor);
+            myTiles[theRoomY][theRoomX][myRoomSize - 1][myDoorIndex]
+                    = topDoor.getDoors()[0];
+            myTiles[theRoomY + 1][theRoomX][0][myDoorIndex]
+                    = topDoor.getDoors()[1];
+        }
+
+        // Right door
+        if (theRoomX == (myMazeSize - 1)) {
+            // No right door
+            myTiles[theRoomY][theRoomX][myDoorIndex][myRoomSize - 1]
+                    = new WallTile();
+        } else {
+            // Make a right door
+            final DoorController rightDoor = new DoorController(myQuestion);
+            myDoors.add(rightDoor);
+            myTiles[theRoomY][theRoomX][myDoorIndex][myRoomSize - 1]
+                    = rightDoor.getDoors()[0];
+            myTiles[theRoomY][theRoomX + 1][myDoorIndex][0]
+                    = rightDoor.getDoors()[1];
+        }
     }
 
     /**
