@@ -2,14 +2,24 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import model.enums.TileID;
+import model.interfaces.DoorUpdateListener;
+import model.interfaces.QuestionHandler;
+import model.interfaces.Tile;
 
 /**
  * Controller for a pair of doors in a maze.
  *
  * @author Shane Menzies
- * @version 10/27/24
+ * @version 11/10/24
  */
 public final class DoorController {
+
+    /**
+     * Exception message for an invalid question result.
+     */
+    private static final String INVALID_RESULT_STRING
+            = "Invalid Result provided to DoorController!";
 
     /**
      * Pair of doors this controller is in charge of.
@@ -25,6 +35,11 @@ public final class DoorController {
      * All update listeners for this door controller.
      */
     private final List<DoorUpdateListener> myListeners;
+
+    /**
+     * Question handler to send the question to ask it.
+     */
+    private QuestionHandler myQuestionHandler;
 
     /**
      * State of these doors.
@@ -67,6 +82,15 @@ public final class DoorController {
     }
 
     /**
+     * Sets the question handler this door should use.
+     *
+     * @param theHandler The new question handler to use.
+     */
+    public void setHandler(final QuestionHandler theHandler) {
+        myQuestionHandler = theHandler;
+    }
+
+    /**
      * Adds a new update listener to this DoorController.
      *
      * @param theListener Update Listener to add.
@@ -95,15 +119,42 @@ public final class DoorController {
     }
 
     /**
+     * Handles the result of this door's question being asked.
+     *
+     * @param theResult Result to be handled.
+     */
+    private void handleQuestionResult(final QuestionHandler.QuestionResult theResult) {
+        switch (theResult) {
+            case CORRECT:
+                myState = DoorState.OPEN;
+                break;
+
+            case INCORRECT:
+                myState = DoorState.LOCKED;
+                break;
+
+            case CANCELLED:
+                myState = DoorState.UNANSWERED;
+                break;
+
+            default:
+                throw new IllegalArgumentException(INVALID_RESULT_STRING);
+        }
+
+        updateListeners();
+    }
+
+    /**
      * Triggers the associated question to be shown to the player.
      */
     private void triggerQuestion() {
-        // TODO: Make associated question active in GameState
-        System.out.println("DEBUG: Question would be asked here:\n\tQuestion: "
-                + myQuestion.getQuestion() + "\n\tAnswer: " + myQuestion.getAnswer());
-
-        System.out.println("DEBUG: Opening door.");
-        myState = DoorState.OPEN;
+        try {
+            myQuestionHandler.askQuestion(myQuestion, new DoorAnswerCallback());
+        } catch (final QuestionHandler.QuestionRejectedException exception) {
+            // Can't currently ask the question, this shouldn't happen so log it and continue.
+            System.err.println(exception.getMessage());
+            myState = DoorState.UNANSWERED;
+        }
 
         updateListeners();
     }
@@ -164,6 +215,17 @@ public final class DoorController {
                 case LOCKED -> TileID.DOOR_LOCKED;
                 case OPEN -> TileID.DOOR_OPEN;
             };
+        }
+
+        @Override
+        public String toString() {
+            return "X";
+        }
+    }
+
+    private final class DoorAnswerCallback implements QuestionHandler.AnswerCallback {
+        public void call(final QuestionHandler.QuestionResult theResult) {
+            handleQuestionResult(theResult);
         }
     }
 }

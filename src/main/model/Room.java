@@ -1,12 +1,16 @@
 package model;
 
+import java.io.Serializable;
+import model.interfaces.Tile;
+
 /**
  * Represents an entire room in a maze.
  *
  * @author Shane Menzies
  * @version 10/26/24
  */
-public final class Room {
+public final class Room implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Exception message for an invalid tiles array with height of 0.
@@ -110,6 +114,21 @@ public final class Room {
      */
     public int getWidth() {
         return myTiles[0].length;
+    }
+
+    /**
+     * Checks if X and Y coordinates are inside the bounds of this room.
+     *
+     * @param theX X coordinate to check
+     * @param theY Y coordinate to check
+     * @return True if inside the bounds of this room,
+     *          false otherwise.
+     */
+    public boolean insideBounds(final int theX, final int theY) {
+        return theX >= 0
+                && theX < getWidth()
+                && theY >= 0
+                && theY < getHeight();
     }
 
     /**

@@ -104,6 +104,16 @@ public class CoordinatesTest {
     }
 
     /**
+     * Tests Coordinates toString() override.
+     */
+    @Test
+    public void testToString() {
+        final String expected = "Room: (" + DEFAULT_ROOM_X + ", " + DEFAULT_ROOM_Y + "); "
+                + "Tile: (" + DEFAULT_X + ", " + DEFAULT_Y + ")";
+        assertEquals(expected, myCoordinates.toString());
+    }
+
+    /**
      * Test equals to ensure two Coordinates with identical values are equal.
      */
     @Test

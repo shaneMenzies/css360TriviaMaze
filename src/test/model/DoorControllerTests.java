@@ -2,6 +2,9 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.enums.TileID;
+import model.interfaces.DoorUpdateListener;
+import model.interfaces.QuestionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +23,27 @@ class DoorControllerTests {
             "Test Question",
             "Test Answer",
             TriviaQuestion.QuestionType.TRUE_FALSE);
+
+    /**
+     * Basic implementation of QuestionHandler for testing DoorController.
+     */
+    private final QuestionHandler myQuestionHandler = new QuestionHandler() {
+        @Override
+        public void askQuestion(TriviaQuestion theQuestion, AnswerCallback theCallback) {
+            myHasQuestion = true;
+            myAnswerCallback = theCallback;
+        }
+    };
+
+    /**
+     * Answer Callback stored for QuestionHandler.
+     */
+    private QuestionHandler.AnswerCallback myAnswerCallback;
+
+    /**
+     * Whether the QuestionHandler has received a question or not.
+     */
+    private boolean myHasQuestion;
 
     /**
      * Basic update listener for update listener tests.
@@ -91,14 +115,54 @@ class DoorControllerTests {
     }
 
     /**
-     * Test's getState.
+     * Test's the getState() method.
      */
     @Test
     void getState() {
-        // For now can only really test the initial state
         assertEquals(DoorController.DoorState.UNANSWERED, myController.getState());
+    }
 
-        // TODO: Add more complete testing once more of the question handling is implemented.
+    /**
+     * Tests setHandler() method.
+     */
+    @Test
+    void setHandler() {
+        myController.setHandler(myQuestionHandler);
+
+        // Must call tryMoveTo() on a tile to get the
+        // DoorController to send a question to the handler.
+        assertFalse(myHasQuestion,
+                "Question Handler was given a question before it should have been!");
+        myController.getDoors()[0].tryMoveTo();
+        assertTrue(myHasQuestion,
+                "QuestionHandler wasn't given a question when it should have been!");
+
+        // Check that the state gets changed according to the question result.
+        myAnswerCallback.call(QuestionHandler.QuestionResult.CORRECT);
+        myHasQuestion = false;
+        assertEquals(DoorController.DoorState.OPEN, myController.getState(),
+                "DoorController didn't change state to open after the question was" +
+                        " answered correctly!");
+
+        myController = new DoorController(TEST_QUESTION);
+        myController.setHandler(myQuestionHandler);
+
+        myController.getDoors()[0].tryMoveTo();
+        myAnswerCallback.call(QuestionHandler.QuestionResult.INCORRECT);
+        myHasQuestion = false;
+        assertEquals(DoorController.DoorState.LOCKED, myController.getState(),
+                "DoorController didn't change state to locked after the question was" +
+                        " answered incorrectly!");
+
+        myController = new DoorController(TEST_QUESTION);
+        myController.setHandler(myQuestionHandler);
+
+        myController.getDoors()[0].tryMoveTo();
+        myAnswerCallback.call(QuestionHandler.QuestionResult.CANCELLED);
+        myHasQuestion = false;
+        assertEquals(DoorController.DoorState.UNANSWERED, myController.getState(),
+                "DoorController changed it's state even though question was " +
+                        "cancelled!");
     }
 
     /**
@@ -106,6 +170,7 @@ class DoorControllerTests {
      */
     @Test
     void tileMoveTo() {
+        myController.setHandler(myQuestionHandler);
         myController.addUpdateListener(myUpdateListener);
         assertEquals(0, myUpdateCount);
 

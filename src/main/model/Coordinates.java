@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Class representing coordinates within a room, including X and Y positions.
  *
@@ -7,7 +9,18 @@ package model;
  * @author Shane Menzies
  * @version 11/6/24
  */
-public final class Coordinates {
+public final class Coordinates implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Inner separator between X and Y values.
+     */
+    private static final String COORDINATE_INNER_SEPARATOR = ", ";
+
+    /**
+     * Outer separator between Room coordinates and Tile coordinates.
+     */
+    private static final String COORDINATE_OUTER_SEPARATOR = "; ";
 
     /**
      * X coordinate identifying the room.
@@ -100,6 +113,18 @@ public final class Coordinates {
      */
     public void setY(final int theY) {
         myY = theY;
+    }
+
+    /**
+     * Gets a string representation of these coordinates.
+     *
+     * @return String representation of these coordinates.
+     */
+    @Override
+    public String toString() {
+        return "Room: (" + myRoomX + COORDINATE_INNER_SEPARATOR + myRoomY + ')'
+                + COORDINATE_OUTER_SEPARATOR
+                + "Tile: (" + myX + COORDINATE_INNER_SEPARATOR + myY + ')';
     }
 
     /**

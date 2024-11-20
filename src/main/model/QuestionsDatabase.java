@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import model.interfaces.QuestionSource;
 import org.sqlite.SQLiteDataSource;
 
 /**
@@ -15,7 +16,7 @@ import org.sqlite.SQLiteDataSource;
  * @author Shane Menzies
  * @version 11/2/24
  */
-public final class QuestionsDatabase {
+public final class QuestionsDatabase implements QuestionSource {
 
     /**
      * Location and name of SQL database file.
@@ -89,6 +90,7 @@ public final class QuestionsDatabase {
      *
      * @return Random trivia question.
      */
+    @Override
     public TriviaQuestion getQuestion() {
         final TriviaQuestion question = myQuestions.get(myIndex);
         myIndex++;

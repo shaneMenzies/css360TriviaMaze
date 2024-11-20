@@ -1,8 +1,9 @@
 package model;
 
-import model.interfaces.PlayerUpdateListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
+import model.interfaces.PlayerUpdateListener;
 
 /**
  * Represents a player in the game, tracking their position, score, and lives.
@@ -11,7 +12,8 @@ import java.util.List;
  * @author Arafa Mohamed
  * @version 10/25/24
  */
-public final class Player {
+public final class Player implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /** The current coordinates of the player on the game grid. */
     private Coordinates myPosition;
@@ -115,4 +117,3 @@ public final class Player {
     }
 
 }
-
