@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.enums.TileID;
 import model.tiles.EmptyTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

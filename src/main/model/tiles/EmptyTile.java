@@ -1,7 +1,7 @@
 package model.tiles;
 
-import model.Tile;
-import model.TileID;
+import model.enums.TileID;
+import model.interfaces.Tile;
 
 /**
  * An empty tile.
@@ -25,5 +25,10 @@ public final class EmptyTile implements Tile {
     @Override
     public TileID getTileID() {
         return TileID.EMPTY;
+    }
+
+    @Override
+    public String toString() {
+        return " ";
     }
 }

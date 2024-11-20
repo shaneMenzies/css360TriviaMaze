@@ -1,4 +1,6 @@
-package model;
+package model.interfaces;
+
+import model.enums.TileID;
 
 import java.io.Serializable;
 
