@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Class representing coordinates within a room, including X and Y positions.
  *
@@ -7,7 +9,8 @@ package model;
  * @author Shane Menzies
  * @version 11/6/24
  */
-public final class Coordinates {
+public final class Coordinates implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * X coordinate identifying the room.

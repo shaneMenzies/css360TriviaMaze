@@ -2,6 +2,7 @@ package model;
 
 import model.enums.Direction;
 import model.enums.GameWinState;
+import java.io.Serializable;
 
 /**
  * Represents the entire state of a game being played.
@@ -9,7 +10,8 @@ import model.enums.GameWinState;
  * @author Shane Menzies
  * @version 11/3/24
  */
-public final class GameState {
+public final class GameState implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Settings for this game.

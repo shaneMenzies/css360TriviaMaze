@@ -1,12 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Holds the settings for an active game.
  *
  * @author Shane Menzies
  * @version 11/3/24
  */
-public final class GameSettings {
+public final class GameSettings implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Setting for how many lives the player starts with.

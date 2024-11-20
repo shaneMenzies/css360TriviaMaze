@@ -1,12 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  * Represents an entire room in a maze.
  *
  * @author Shane Menzies
  * @version 10/26/24
  */
-public final class Room {
+public final class Room implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * Exception message for an invalid tiles array with height of 0.
