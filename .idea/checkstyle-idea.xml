@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CheckStyle-IDEA" serialisationVersion="2">
-    <checkstyleVersion>10.12.4</checkstyleVersion>
+    <checkstyleVersion>10.18.1</checkstyleVersion>
     <scanScope>JavaOnly</scanScope>
     <option name="thirdPartyClasspath" />
     <option name="activeLocationIds" />
@@ -10,6 +10,7 @@
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="d2786e92-34b2-4fb6-ae43-869362914c87" type="LOCAL_FILE" scope="All" description="Tcss hw5">$USER_HOME$/Desktop/hw5-project/Arafam-coloradjuster/support_files/tcss305_checkstyle_nextline.xml</ConfigurationLocation>
+        <ConfigurationLocation id="03c5eced-eb1d-487a-92a5-a592f9df1229" type="LOCAL_FILE" scope="All" description="UWT checkstyle cynlopez">$USER_HOME$/Downloads/UWT/Software Dev Fall' 24/tcss305_checkstyle_sameline.xml</ConfigurationLocation>
         <ConfigurationLocation id="69da520c-a76d-442a-afa6-305322ccef4d" type="LOCAL_FILE" scope="All" description="tcss 305 hw5">$USER_HOME$/Desktop/hw5-project/Arafam-coloradjuster/support_files/tcss305_checkstyle_nextline.xml</ConfigurationLocation>
       </list>
     </option>

@@ -24,14 +24,14 @@ public class Music {
      *
      * @param theMusicLocation The path to the music file to be played.
      */
-    private void playMusic(String theMusicLocation) {
+    private void playMusic(final String theMusicLocation) {
         try {
             final File musicPath = new File(theMusicLocation);
-            AudioInputStream myAudioInput = AudioSystem.getAudioInputStream(musicPath);
+            final AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
             myClip = AudioSystem.getClip();
 
             if (musicPath.exists()) {
-                myClip.open(myAudioInput);
+                myClip.open(audioInput);
                 myClip.start();
                 myClip.loop(Clip.LOOP_CONTINUOUSLY);
 
