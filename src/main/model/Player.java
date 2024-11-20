@@ -1,9 +1,10 @@
 package model;
 
-import model.interfaces.PlayerUpdateListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
+import model.interfaces.PlayerUpdateListener;
+
 /**
  * Represents a player in the game, tracking their position, score, and lives.
  * This class is final to prevent inheritance.
@@ -116,4 +117,3 @@ public final class Player implements Serializable {
     }
 
 }
-

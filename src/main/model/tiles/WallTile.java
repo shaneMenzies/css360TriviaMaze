@@ -1,7 +1,7 @@
 package model.tiles;
 
-import model.Tile;
-import model.TileID;
+import model.enums.TileID;
+import model.interfaces.Tile;
 
 /**
  * A solid wall tile, impassable by the player.
@@ -25,5 +25,10 @@ public final class WallTile implements Tile {
     @Override
     public TileID getTileID() {
         return TileID.WALL;
+    }
+
+    @Override
+    public String toString() {
+        return "▮";
     }
 }

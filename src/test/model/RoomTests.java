@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.interfaces.Tile;
 import model.tiles.EmptyTile;
 import model.tiles.WallTile;
 import org.junit.jupiter.api.BeforeEach;
@@ -149,6 +150,42 @@ class RoomTests {
                         TEST_ROOM_WIDTH + 1));
 
         assertEquals(TEST_ROOM_WIDTH + 1, myTestRoom.getWidth());
+    }
+
+    /**
+     * Test's Room's insideBounds() method.
+     */
+    @Test
+    void insideBounds() {
+        int testX = 0;
+        int testY = 0;
+
+        assertTrue(myTestRoom.insideBounds(testX, testY),
+                "(" + testX + ", " + testY + ") should be inside the room bounds.");
+
+        testX = myTestRoom.getWidth() - 1;
+        testY = myTestRoom.getHeight() - 1;
+
+        assertTrue(myTestRoom.insideBounds(testX, testY),
+                "(" + testX + ", " + testY + ") should be inside the room bounds.");
+
+        testX = myTestRoom.getWidth();
+        testY = myTestRoom.getHeight();
+
+        assertFalse(myTestRoom.insideBounds(testX, testY),
+                "(" + testX + ", " + testY + ") shouldn't be inside the room bounds.");
+
+        testX = myTestRoom.getWidth() + 3;
+        testY = myTestRoom.getWidth() + 3;
+
+        assertFalse(myTestRoom.insideBounds(testX, testY),
+                "(" + testX + ", " + testY + ") shouldn't be inside the room bounds.");
+
+        testX = -1;
+        testY = -1;
+
+        assertFalse(myTestRoom.insideBounds(testX, testY),
+                "(" + testX + ", " + testY + ") shouldn't be inside the room bounds.");
     }
 
     /**
