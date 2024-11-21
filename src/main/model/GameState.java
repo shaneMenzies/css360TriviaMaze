@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import model.enums.Direction;
@@ -15,6 +17,7 @@ import model.interfaces.QuestionHandler;
  * @version 11/10/24
  */
 public final class GameState implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

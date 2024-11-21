@@ -1,5 +1,6 @@
 package model.interfaces;
 
+import java.io.Serializable;
 import model.QuestionController;
 
 /**
@@ -9,7 +10,7 @@ import model.QuestionController;
  * @author Shane Menzies
  * @version 11/10/24
  */
-public interface QuestionControllerUpdateListener {
+public interface QuestionControllerUpdateListener extends Serializable {
 
     /**
      * Handles an update in the specified Question Controller.
