@@ -30,7 +30,7 @@ class GameStateTests {
     /**
      * Size of the test maze.
      */
-    private static final int TEST_MAZE_SIZE = 3;
+    private static final int TEST_MAZE_SIZE = 9;
 
     /**
      * GameSettings for testing.

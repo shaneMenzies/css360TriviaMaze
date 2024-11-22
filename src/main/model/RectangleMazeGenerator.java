@@ -182,21 +182,18 @@ public class RectangleMazeGenerator implements MazeGenerator {
             }
         }
 
-        // Print out generated maze
-        for (int y = (myMazeHeight * myRoomHeight) - 1; y >= 0; y--) {
-            for (int x = 0; x < (myMazeWidth * myRoomWidth); x++) {
-                System.out.print(myTiles[y / myRoomHeight][x / myRoomWidth]
-                                 [y % myRoomHeight][x % myRoomWidth]);
-            }
-            System.out.println();
-        }
-
         // Can finally put together Maze.
-        return new Maze(
-                rooms, myDoors.toArray(new DoorController[0]),
-                myStartX, myStartY,
-                myExitX, myExitY
+        final Maze finishedMaze = new Maze(
+            rooms, myDoors.toArray(new DoorController[0]),
+            myStartX, myStartY,
+            myExitX, myExitY
         );
+
+        // Print out generated maze
+System.out.println("DEBUG: RectangleMazeGenerator generated Maze:\n"
+            + finishedMaze);
+
+        return finishedMaze;
     }
 
     /**
