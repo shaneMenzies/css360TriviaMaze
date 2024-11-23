@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import model.interfaces.MazeGenerator;
 import model.interfaces.QuestionSource;
 import model.interfaces.Tile;
@@ -17,12 +18,6 @@ import model.tiles.WallTile;
 public class RectangleMazeGenerator implements MazeGenerator {
 
     /**
-     * Exception message for being provided illegal dimension.
-     */
-    private static final String ILLEGAL_DIMENSIONS_MESSAGE =
-            "Illegal dimensions provided!";
-
-    /**
      * Exception message for being provided illegal coordinates.
      */
     private static final String ILLEGAL_COORDINATES_MESSAGE =
@@ -31,32 +26,42 @@ public class RectangleMazeGenerator implements MazeGenerator {
     /**
      * Height of the generated Maze.
      */
-    private int myMazeHeight;
+    private final int myMazeHeight;
 
     /**
      * Width of the generated Maze.
      */
-    private int myMazeWidth;
+    private final int myMazeWidth;
 
     /**
      * Height of the generated Room.
      */
-    private int myRoomHeight;
+    private final int myRoomHeight;
 
     /**
      * Width of the generated Room.
      */
-    private int myRoomWidth;
+    private final int myRoomWidth;
+
+    /**
+     * QuestionSource to get questions from.
+     */
+    private final QuestionSource myQuestionSource;
 
     /**
      * Index of the door in each vertical wall.
      */
-    private int myVerticalDoorIndex;
+    private final int myVerticalDoorIndex;
 
     /**
      * Index of the door in each horizontal wall.
      */
-    private int myHorizontalDoorIndex;
+    private final int myHorizontalDoorIndex;
+
+    /**
+     * True if a specific starting room was specified.
+     */
+    private boolean myStartSpecified;
 
     /**
      * X-coordinate of the starting room.
@@ -69,6 +74,11 @@ public class RectangleMazeGenerator implements MazeGenerator {
     private int myStartY;
 
     /**
+     * True if a specific exit room was specified.
+     */
+    private boolean myExitSpecified;
+
+    /**
      * X-coordinate of the exit room.
      */
     private int myExitX;
@@ -78,10 +88,6 @@ public class RectangleMazeGenerator implements MazeGenerator {
      */
     private int myExitY;
 
-    /**
-     * QuestionSource to get questions from.
-     */
-    private QuestionSource myQuestionSource;
 
     /**
      * Arrays of tiles for each room.
@@ -95,43 +101,23 @@ public class RectangleMazeGenerator implements MazeGenerator {
 
     /**
      * Constructs a rectangular maze generator.
-     */
-    public RectangleMazeGenerator() {
-    }
-
-    /**
-     * Sets the maze dimensions in terms of rooms.
      *
-     * @param theHeight How many rooms tall a generated Maze should be.
-     * @param theWidth How many rooms wide a generated Maze should be.
+     * @param theMazeHeight Height of the Maze in rooms.
+     * @param theMazeWidth Width of the Maze in rooms.
+     * @param theRoomHeight Height of each room in tiles.
+     * @param theRoomWidth Width of each room in tiles.
+     * @param theQuestionSource Source to get questions from for trivia doors.
      */
-    public void setMazeDimensions(final int theHeight, final int theWidth) {
-        if (theHeight < 1
-                || theWidth < 1) {
-            throw new IllegalArgumentException(ILLEGAL_DIMENSIONS_MESSAGE);
-        }
-
-        myMazeHeight = theHeight;
-        myMazeWidth = theWidth;
-    }
-
-    /**
-     * Sets the room dimensions in terms of tiles.
-     *
-     * @param theHeight How many tiles tall a generated Room should be.
-     * @param theWidth How many tiles wide a generated Room should be.
-     */
-    public void setRoomDimensions(final int theHeight, final int theWidth) {
-        if (theHeight < 1
-            || theWidth < 1) {
-            throw new IllegalArgumentException(ILLEGAL_DIMENSIONS_MESSAGE);
-        }
-
-        myRoomHeight = theHeight;
+    public RectangleMazeGenerator(final int theMazeHeight, final int theMazeWidth,
+                                  final int theRoomHeight, final int theRoomWidth,
+                                  final QuestionSource theQuestionSource) {
+        myMazeHeight = theMazeHeight;
+        myMazeWidth = theMazeWidth;
+        myRoomHeight = theRoomHeight;
         myVerticalDoorIndex = myRoomHeight / 2;
-
-        myRoomWidth = theWidth;
+        myRoomWidth = theRoomWidth;
         myHorizontalDoorIndex = myRoomWidth / 2;
+        myQuestionSource = theQuestionSource;
     }
 
     /**
@@ -145,6 +131,8 @@ public class RectangleMazeGenerator implements MazeGenerator {
             || theStartY < 0) {
             throw new IllegalArgumentException(ILLEGAL_COORDINATES_MESSAGE);
         }
+
+        myStartSpecified = true;
 
         myStartX = theStartX;
         myStartY = theStartY;
@@ -162,16 +150,22 @@ public class RectangleMazeGenerator implements MazeGenerator {
             throw new IllegalArgumentException(ILLEGAL_COORDINATES_MESSAGE);
         }
 
+        myExitSpecified = true;
+
         myExitX = theExitX;
         myExitY = theExitY;
     }
 
-    public void setQuestionsSource(final QuestionSource theNewSource) {
-        myQuestionSource = theNewSource;
-    }
-
     @Override
     public Maze generate() {
+
+        // Generate start and exit positions if not specified
+        if (!myStartSpecified) {
+            generateStart();
+        }
+        if (!myExitSpecified) {
+            generateExit();
+        }
 
         // Make room and tile arrays
         final Room[][] rooms = new Room[myMazeHeight][myMazeWidth];
@@ -188,21 +182,71 @@ public class RectangleMazeGenerator implements MazeGenerator {
             }
         }
 
-        // Print out generated maze
-        for (int y = (myMazeHeight * myRoomHeight) - 1; y >= 0; y--) {
-            for (int x = 0; x < (myMazeWidth * myRoomWidth); x++) {
-                System.out.print(myTiles[y / myRoomHeight][x / myRoomWidth]
-                                 [y % myRoomHeight][x % myRoomWidth]);
-            }
-            System.out.println();
-        }
-
         // Can finally put together Maze.
-        return new Maze(
-                rooms, myDoors.toArray(new DoorController[0]),
-                myStartX, myStartY,
-                myExitX, myExitY
+        final Maze finishedMaze = new Maze(
+            rooms, myDoors.toArray(new DoorController[0]),
+            myStartX, myStartY,
+            myExitX, myExitY
         );
+
+        // Print out generated maze
+System.out.println("DEBUG: RectangleMazeGenerator generated Maze:\n"
+            + finishedMaze);
+
+        return finishedMaze;
+    }
+
+    /**
+     * Generates a starting point at the center of the maze.
+     */
+    private void generateStart() {
+        final Random rand = new Random();
+
+        myStartX = myMazeWidth / 2;
+        myStartY = myMazeHeight / 2;
+
+        // Check for an even maze width or height
+        if (myMazeWidth % 2 == 0
+            && rand.nextBoolean()) {
+            myStartX++;
+        }
+        if (myMazeHeight % 2 == 0
+            && rand.nextBoolean()) {
+            myStartY++;
+        }
+    }
+
+    /**
+     * Generates a random position for the Exit.
+     */
+    private void generateExit() {
+        final Random rand = new Random();
+
+        // Pick a random edge for the exit to be at
+        switch (rand.nextInt(1, 5)) {
+            case 1: // Top Edge
+                myExitX = rand.nextInt(0, myMazeWidth);
+                myExitY = myMazeHeight - 1;
+                break;
+
+            case 2: // Bottom Edge
+                myExitX = rand.nextInt(0, myMazeWidth);
+                myExitY = 0;
+                break;
+
+            case 3: // Left Edge
+                myExitX = 0;
+                myExitY = rand.nextInt(0, myMazeHeight);
+                break;
+
+            case 4: // Right Edge
+                myExitX = myMazeWidth - 1;
+                myExitY = rand.nextInt(0, myMazeHeight);
+                break;
+
+            default:
+                throw new IllegalStateException("Invalid result returned from rand.nextInt!");
+        }
     }
 
     /**

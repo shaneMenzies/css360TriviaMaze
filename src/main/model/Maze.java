@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import model.enums.Direction;
 import model.interfaces.Tile;
@@ -11,6 +12,7 @@ import model.interfaces.Tile;
  * @version 11/2/24
  */
 public class Maze implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -295,6 +297,39 @@ public class Maze implements Serializable {
      */
     public int getWidth() {
         return myRooms[0].length;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder stringBuilder = new StringBuilder();
+
+        // Assume that each room has identical dimensions
+        final int roomHeight = myRooms[0][0].getHeight();
+        final int roomWidth = myRooms[0][0].getWidth();
+
+        // Need to add each row of tiles starting from the top
+        int y = (getHeight() * roomHeight) - 1;
+        while (y >= 0) {
+            final int roomY = y / roomHeight;
+            final int tileY = y % roomHeight;
+
+            // Print this entire row of tiles
+            for (int x = 0; x < getWidth() * roomWidth; x++) {
+                final int roomX = x / roomWidth;
+                final int tileX = x % roomWidth;
+                stringBuilder.append(
+                    getTile(
+                            new Coordinates(roomX, roomY, tileX, tileY)
+                    ).toString()
+                );
+            }
+
+            // Move to next row
+            stringBuilder.append('\n');
+            y--;
+        }
+
+        return stringBuilder.toString();
     }
 
     /**
