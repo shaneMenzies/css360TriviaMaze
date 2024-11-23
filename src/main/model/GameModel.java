@@ -60,33 +60,8 @@ public class GameModel {
         mySettings = theSettings;
         mySaveController = theSaveController;
 
-        // Configures the maze generator
-        configureMazeGenerator(theGenerator);
-
-        // Creates initial game state
-        newGame();
-    }
-
-    /**
-     * Configures the maze generator with default or predefined settings.
-     * @param theGenerator Maze generator to configure
-     */
-    private void configureMazeGenerator(final MazeGenerator theGenerator) {
-        if (theGenerator instanceof RectangleMazeGenerator) {
-            RectangleMazeGenerator rectangleGenerator =
-                    (RectangleMazeGenerator) theGenerator;
-
-            // Sets default maze and room dimensions
-            rectangleGenerator.setMazeDimensions(3, 3);
-            rectangleGenerator.setRoomDimensions(7, 7);
-
-            // Sets start and exit coordinates
-            rectangleGenerator.setStartCoordinates(0, 0);
-            rectangleGenerator.setExitCoordinates(2, 2);
-
-            // Sets question source
-            rectangleGenerator.setQuestionsSource(myQuestionDatabase);
-        }
+        // Initializes state as null - it will be created when newGame() is called
+        myState = null;
     }
 
     /**
