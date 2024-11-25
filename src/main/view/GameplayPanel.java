@@ -3,6 +3,9 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 import model.*;
+import model.enums.GamePlayPhase;
+import model.enums.TileID;
+import model.interfaces.MazeGenerator;
 
 /**
  * GameplayPanel represents the main game area.
@@ -11,77 +14,62 @@ import model.*;
  * @author Cynthia Lopez
  * @version 11/1/24
  */
-public class GameplayPanel extends JPanel implements Runnable {
-    /** Height of the panel. */
-    private final int myHeight;
+public class GameplayPanel extends JPanel {
 
-    /** Width of the panel. */
-    private final int myWidth;
+    /**
+     * Target update frame rate.
+     */
+    private static final int TARGET_FPS = 60;
 
     /** Height of a single tile. */
-    private final int myTileHeight;
-
-    /** Width of a single tile. */
-    private final int myTileWidth;
+    private int myTileHeight, myTileWidth;
 
     /** GameState object representing the state of the game. */
     private final GameState myGameState;
 
-    /** Thread for the running game loop. */
-    private Thread myGameThread;
-
     /** Manages player input and actions. */
-    private final PlayerManager myPlayerManager = new PlayerManager();
-
-    /** Frames per second for the game. */
-    private final int myFPS = 60;
+    private final PlayerManager myPlayerManager;
 
     /** PlayerView instance to render the player. */
-    private final PlayerView myPlayerView = new PlayerView(this, myPlayerManager);
+    private final PlayerView myPlayerView;
+
+    /** Maze instance. */
+    private final Maze myMaze;
+
+    /** Generator for rectangular maze.*/
+    private final RectangleMazeGenerator myRMG;
+
+    /** Game settings. */
+    private final GameSettings mySettings;
 
     /**
      * Constructs a game panel.
-     *
-     * @param theGameState the GameState object to be used in the current game.
      */
-    public GameplayPanel(final GameState theGameState) {
-        myGameState = theGameState;
-        myWidth = 780;
-        myHeight = 440;
+    public GameplayPanel() {
+        mySettings = new GameSettings(3, 10, -10);
 
-        // VERIFY SIZE IS APPROPRIATE FOR TILES
-        myTileWidth = 20;
-        myTileHeight = 20;
+        myRMG = new RectangleMazeGenerator(6, 6,
+                5, 5,
+                QuestionsDatabase.getInstance());
+        myMaze = myRMG.generate();
+        myGameState = new GameState(mySettings, myMaze);
+        myPlayerManager = new PlayerManager();
+        myPlayerView = new PlayerView(this, myPlayerManager);
+        myGameState.setPhase(GamePlayPhase.IN_PROGRESS);
 
-        // add tiles to game panel
+        myTileWidth = 0;
+        myTileHeight = 0;
+
         mainGameWindow();
         startGameThread();
     }
 
     /** Configures the main game window. */
     private void mainGameWindow() {
-        setPreferredSize(new Dimension(myWidth, myHeight));
         setBackground(Color.BLACK);
         addKeyListener(myPlayerManager);
         setFocusable(true);
-
         setLayout(null);
-    }
-
-    /** sets up a mini map for user to see where avatar is located. */
-    private void mapPanel() {
-
-    }
-
-    /** Starts game loop in a separate thread. */
-    private void startGameThread() {
-        myGameThread = new Thread(this); // passing Gameplay Panel to this constructor.
-        myGameThread.start();
-    }
-
-    /** Updates the state of the game, including player movement and interactions. */
-    private void update() {
-        myPlayerView.getUpdate();
     }
 
     /**
@@ -93,33 +81,55 @@ public class GameplayPanel extends JPanel implements Runnable {
         super.paintComponent(theGraphics);
         final Graphics2D g2D = (Graphics2D) theGraphics;
 
-        myPlayerView.getDraw(g2D);
+        SpriteMap tileMap = SpriteMap.getInstance();
+
+        int roomHeight = myMaze.getRoom(0, 0).getHeight();
+        int roomWidth = myMaze.getRoom(0, 0).getWidth();
+
+        int totalHeight = myMaze.getHeight() * roomHeight;
+        int totalWidth = myMaze.getWidth() * roomWidth;
+
+        myTileHeight = (getHeight() / totalHeight);
+        myTileWidth = (getWidth() / totalWidth);
+
+        for (int y = totalHeight - 1; y >= 0; y--) {
+            for (int x = 0; x < (myMaze.getWidth() * roomWidth); x++) {
+                int roomX = x / roomWidth;
+                int roomY = y / roomHeight;
+                int tileX = x % roomWidth;
+                int tileY = y % roomHeight;
+
+                final TileID tileID = myMaze.getRoom(roomX, roomY).getTile(tileX, tileY).getTileID();
+                final Image tileImage = tileMap.get(tileID);
+
+                g2D.drawImage(tileImage, x * myTileWidth, y * myTileHeight,
+                        myTileWidth, myTileHeight, null);
+            }
+        }
+
+        myPlayerView.draw(g2D);
 
         g2D.dispose();
     }
 
-    /** The game loop for updating and rendering the game at targeted FPS. */
-    @Override
-    public void run() {
-        // accumulator method
-        final double drawInterval = (double) 1000000000 / myFPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
+    /** Starts game loop in a separate thread. */
+    private void startGameThread() {
+        // Target delay (in milliseconds)
+        final int delay = 1000 / TARGET_FPS;
+        new Timer(delay, ActionListener -> refresh()).start();
+    }
 
-        while (myGameThread != null) {
-            currentTime = System.nanoTime();
+    /** Updates the state of the game, including player movement and interactions. */
+    private void refresh() {
+        myPlayerView.update();
+    }
 
-            delta += (currentTime - lastTime) / drawInterval;
-
-            lastTime = currentTime;
-
-            if (delta >= 1) {
-                update();
-                repaint();
-                delta--;
-            }
-        }
+    /** Getter for current game state.
+     *
+     * @return the current game state.
+     */
+    public GameState getGameState() {
+        return myGameState;
     }
 
     /**
@@ -138,5 +148,14 @@ public class GameplayPanel extends JPanel implements Runnable {
      */
     public int getTileHeight() {
         return myTileHeight;
+    }
+
+    /**
+     * Getter for Maze Generator (Rectangular)
+     *
+     * @return the rectangular maze.
+     */
+    public MazeGenerator getMazeGenerator() {
+        return myRMG;
     }
 }
