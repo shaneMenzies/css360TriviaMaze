@@ -27,5 +27,5 @@ replay_pid*
 .idea/
 out/
 
-# Game Save File
-gamesave.ser
+# Game Save Files
+*.ser
