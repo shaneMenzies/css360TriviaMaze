@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import model.interfaces.QuestionControllerUpdateListener;
@@ -13,7 +15,9 @@ import model.interfaces.QuestionHandler;
  * @author Shane Menzies
  * @version 11/10/24
  */
-public final class QuestionController implements QuestionHandler {
+public final class QuestionController implements QuestionHandler, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Exception message for a question being rejected because this handler

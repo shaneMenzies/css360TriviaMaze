@@ -1,16 +1,21 @@
 package model;
 
-import model.tiles.EmptyTile;
-import model.tiles.WallTile;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
+import model.interfaces.Tile;
+import model.tiles.EmptyTile;
+import model.tiles.WallTile;
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests saving and loading game states, handling of invalid files,
@@ -54,7 +59,7 @@ public class SaveControllerTest {
         Room[][] rooms = new Room[][]{{new Room(Room.RoomType.START, tiles)}};
 
         // Creates maze with single room
-        Maze maze = new Maze(rooms, 0, 0, 0, 0);
+        Maze maze = new Maze(rooms,null, 0, 0, 0, 0);
 
         gameState = new GameState(settings, maze);
     }
@@ -184,8 +189,8 @@ public class SaveControllerTest {
         assertEquals(originalMaze.getHeight(), loadedMaze.getHeight(), "Maze height should match");
 
         // Compares specific tile types in the first room
-        Room originalRoom = originalMaze.getRoomAt(0, 0);
-        Room loadedRoom = loadedMaze.getRoomAt(0, 0);
+        Room originalRoom = originalMaze.getRoom(0, 0);
+        Room loadedRoom = loadedMaze.getRoom(0, 0);
 
         // Checks tile types match
         assertEquals(originalRoom.getTile(0, 0).getTileID(),
@@ -197,9 +202,3 @@ public class SaveControllerTest {
     }
 
 }
-
-
-
-
-
-

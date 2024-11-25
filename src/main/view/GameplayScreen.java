@@ -3,7 +3,12 @@ package view;
 import controller.Music;
 import java.awt.*;
 import javax.swing.*;
-import model.*;
+import model.GameSettings;
+import model.GameState;
+import model.Maze;
+import model.Room;
+import model.enums.TileID;
+import model.interfaces.Tile;
 
 /**
  * Represents the main view for the game screen. Displays map, avatar, direction buttons
@@ -78,7 +83,7 @@ public class GameplayScreen extends JFrame {
         }
 
         final GameSettings settings = new GameSettings(2, 10, -5);
-        final Maze maze = new Maze(rooms, 0, 0, 29, 29);
+        final Maze maze = new Maze(rooms, null, 0, 0, 29, 29);
 
         final GameState gameState = new GameState(settings, maze);
 

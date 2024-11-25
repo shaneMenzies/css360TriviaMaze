@@ -73,13 +73,13 @@ public class RealisticSquareMazeGenerator implements MazeGenerator {
 
     @Override
     public Maze generate() {
-        RectangleMazeGenerator rectangleMazeGenerator = new RectangleMazeGenerator();
+        final RectangleMazeGenerator rectangleMazeGenerator
+                = new RectangleMazeGenerator(myMazeSize, myMazeSize,
+                myRoomSize, myRoomSize,
+                () -> myQuestion);
 
-        rectangleMazeGenerator.setMazeDimensions(myMazeSize, myMazeSize);
-        rectangleMazeGenerator.setRoomDimensions(myRoomSize, myRoomSize);
         rectangleMazeGenerator.setStartCoordinates(myStartX, myStartY);
         rectangleMazeGenerator.setExitCoordinates(myExitX, myExitY);
-        rectangleMazeGenerator.setQuestionsSource(() -> myQuestion);
 
         return rectangleMazeGenerator.generate();
     }
