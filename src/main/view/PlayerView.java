@@ -1,5 +1,7 @@
 package view;
 
+import model.Coordinates;
+import model.GameState;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,23 +23,11 @@ public class PlayerView {
     /** PlayerManager instance to listen to input actions. */
     private final PlayerManager myPlayerListener;
 
-    /** Used to render player. */
-    private Graphics2D myGraphics;
-
-    /** Player X coordinates. */
-    private int myPlayerX;
-
-    /** Player Y coordinates. */
-    private int myPlayerY;
-
-    /** Players speed per update. */
-    private final int myPlayerSpeed;
-
     /** BufferedImages for the players sprite different positions. */
     private BufferedImage myPlayerUp, myPlayerDown, myPlayerRight, myPlayerLeft;
 
-    /** Current direction the player is facing. */
-    private String myDirection;
+    /** Current game state. */
+    private final GameState myGameState;
 
     /**
      * Constructs a PlayerView instance with the specified game panel and player manager.
@@ -48,11 +38,7 @@ public class PlayerView {
     public PlayerView(final GameplayPanel theGamePanel, final PlayerManager thePlayerListener) {
         myPlayerListener = thePlayerListener;
         myGamePanel = theGamePanel;
-
-        myPlayerX = 100;
-        myPlayerY = 100;
-        myPlayerSpeed = 4;
-        myDirection = "down";
+        myGameState = myGamePanel.getGameState();
 
         getPlayerImage();
     }
@@ -71,24 +57,9 @@ public class PlayerView {
         }
     }
 
-    /** Updates the players position and direction based on input. */
-    private void update() {
-        if (myPlayerListener.getUpKey()) {
-            myDirection = "up";
-            myPlayerY -= myPlayerSpeed;
-
-        } else if (myPlayerListener.getDownKey()) {
-            myDirection = "down";
-            myPlayerY += myPlayerSpeed;
-
-        } else if (myPlayerListener.getLeftKey()) {
-            myDirection = "left";
-            myPlayerX -= myPlayerSpeed;
-
-        } else if (myPlayerListener.getRightKey()) {
-            myDirection = "right";
-            myPlayerX += myPlayerSpeed;
-        }
+    /** renders player in new position. */
+    public void update() {
+        myPlayerListener.update(myGameState);
     }
 
     /**
@@ -96,31 +67,25 @@ public class PlayerView {
      *
      * @param theGraphics used for rendering.
      */
-    private void draw(final Graphics2D theGraphics) {
-        myGraphics = theGraphics;
-        final BufferedImage image = switch (myDirection) {
-            case "up" -> myPlayerUp;
-            case "down" -> myPlayerDown;
-            case "right" -> myPlayerRight;
-            case "left" -> myPlayerLeft;
-            default -> null;
+    public void draw(final Graphics2D theGraphics) {
+        final BufferedImage image = switch (myPlayerListener.getDirection()) {
+            case UP -> myPlayerDown;
+            case DOWN -> myPlayerUp;
+            case RIGHT -> myPlayerRight;
+            case LEFT -> myPlayerLeft;
         };
 
-        // eventually update with tile ID information
-        theGraphics.drawImage(image, myPlayerX, myPlayerY, myGamePanel.getTileWidth(), myGamePanel.getTileHeight(), null);
-    }
+        Coordinates myPosition = myGameState.getPlayer().getPosition();
+        final int   roomWidth  = myGameState.getMaze().getRoom(0, 0).getWidth();
+        final int roomHeight = myGameState.getMaze().getRoom(0, 0).getHeight();
 
-    /** Triggers update for players position and state. */
-    public void getUpdate() {
-        update();
-    }
+        final int playerX = (myPosition.getRoomX() * roomWidth) + myPosition.getX();
+        final int playerY = (myPosition.getRoomY() * roomHeight) + myPosition.getY();
 
-    /**
-     *  Triggers rendering of player.
-     *
-     * @param theGraphics used for rendering.
-     */
-    public void getDraw(final Graphics2D theGraphics) {
-        draw(theGraphics);
+        final int tileWidth = myGamePanel.getTileWidth();
+        final int tileHeight = myGamePanel.getTileHeight();
+
+        theGraphics.drawImage(image, playerX * tileWidth, playerY * tileHeight,
+                tileWidth, tileHeight, null);
     }
 }

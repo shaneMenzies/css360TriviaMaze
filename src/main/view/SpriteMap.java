@@ -19,7 +19,7 @@ public class SpriteMap extends EnumMap<TileID, Image> {
      * Directory to find the tile images in.
      */
     private static final String IMAGE_DIRECTORY = "resources" + File.separator
-        + "images"  + File.separator + "tiles" + File.separator;
+            + "images"  + File.separator + "tiles" + File.separator;
 
     /**
      * Extension for tile images.
@@ -36,7 +36,7 @@ public class SpriteMap extends EnumMap<TileID, Image> {
      */
     private static final String FALLBACK_IMAGE_NOT_FOUND =
             "Fallback image \"" + IMAGE_DIRECTORY + FALLBACK_IMAGE_NAME + IMAGE_EXTENSION
-            + "\" not found!";
+                    + "\" not found!";
 
     /**
      * The single instance of this class.
@@ -57,7 +57,7 @@ public class SpriteMap extends EnumMap<TileID, Image> {
         try {
             myFallBackImage = ImageIO.read(
                     new File(IMAGE_DIRECTORY + FALLBACK_IMAGE_NAME + IMAGE_EXTENSION)
-                                          );
+            );
         } catch (IOException exception) {
             throw new RuntimeException(FALLBACK_IMAGE_NOT_FOUND);
         }
@@ -83,7 +83,7 @@ public class SpriteMap extends EnumMap<TileID, Image> {
             try {
                 sprite = ImageIO.read(
                         new File(IMAGE_DIRECTORY + nextTile.toString() + IMAGE_EXTENSION)
-                                     );
+                );
             } catch (IOException exception) {
                 sprite = myFallBackImage;
             }

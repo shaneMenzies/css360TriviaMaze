@@ -1,4 +1,3 @@
-import controller.TitleController;
 import view.TitleScreen;
 
 public final class TriviaMazeMain {
@@ -8,8 +7,6 @@ public final class TriviaMazeMain {
     private TriviaMazeMain() { }
 
     public static void main(final String[] theArgs) {
-        System.out.println("TriviaMaze: TODO");
-        TitleScreen view = new TitleScreen();
-        new TitleController(view);
+        new TitleScreen();
     }
 }
