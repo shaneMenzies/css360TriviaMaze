@@ -1,5 +1,13 @@
 package model;
 
+import static model.interfaces.GameModelUpdateListener.UpdateType.LOADED;
+import static model.interfaces.GameModelUpdateListener.UpdateType.NEW_GAME;
+import static model.interfaces.GameModelUpdateListener.UpdateType.SAVED;
+
+import java.util.ArrayList;
+import java.util.List;
+import model.interfaces.GameModelUpdateListener;
+import model.interfaces.GameStateUpdateListener;
 import model.interfaces.MazeGenerator;
 import model.interfaces.QuestionSource;
 
@@ -17,14 +25,20 @@ public class GameModel {
     /** Question source for generating trivia questions. */
     private final QuestionSource myQuestionDatabase;
 
+    /** Game settings for the current game. */
+    private final GameSettings mySettings;
+
     /** Save controller for managing game saves.*/
     private final SaveController mySaveController;
+
+    /**
+     * Update listeners for the entire Game.
+     */
+    private final List<GameModelUpdateListener> myListeners;
 
     /** Current game state. */
     private GameState myState;
 
-    /** Game settings for the current game. */
-    private final GameSettings mySettings;
 
     /**
      * Constructs a new GameModel with the specified maze generator and question source.
@@ -60,6 +74,8 @@ public class GameModel {
         mySettings = theSettings;
         mySaveController = theSaveController;
 
+        myListeners = new ArrayList<>();
+
         // Initializes state as null - it will be created when newGame() is called
         myState = null;
     }
@@ -73,6 +89,9 @@ public class GameModel {
 
         // Creates a new game state with the generated maze and current settings
         myState = new GameState(mySettings, newMaze);
+        myState.addUpdateListener(this::onGameStateUpdate);
+
+        updateListeners(NEW_GAME);
     }
 
     /**
@@ -81,6 +100,8 @@ public class GameModel {
     public void saveGame() {
         if (myState != null) {
             mySaveController.saveGame(myState);
+
+            updateListeners(SAVED);
         }
     }
 
@@ -89,6 +110,9 @@ public class GameModel {
      */
     public void loadGame() {
         myState = mySaveController.loadGame();
+        myState.addUpdateListener(this::onGameStateUpdate);
+
+        updateListeners(LOADED);
     }
 
     /**
@@ -108,15 +132,43 @@ public class GameModel {
     }
 
     /**
-     * Sets the current game state.
-     * @param theState New game state to set
+     * Adds an update listener to this game.
+     *
+     * @param theListener New listener to add.
      */
-    public void setState(final GameState theState) {
-        myState = theState;
+    public void addUpdateListener(final GameModelUpdateListener theListener) {
+        myListeners.add(theListener);
     }
 
+    /**
+     * Remove a previously added update listener from this game.
+     *
+     * @param theListener Previously added listener to remove.
+     * @return True if successfully removed, false otherwise.
+     */
+    public boolean removeUpdateListener(final GameModelUpdateListener theListener) {
+        return myListeners.remove(theListener);
+    }
+
+    /**
+     * Updates all listeners with a certain update.
+     *
+     * @param theUpdateType Type of update.
+     */
+    private void updateListeners(final GameModelUpdateListener.UpdateType theUpdateType) {
+        for (final GameModelUpdateListener listener : myListeners) {
+            listener.doUpdate(theUpdateType, this);
+        }
+    }
+
+    /**
+     * Send along the appropriate update to our listeners for a GameState update.
+     *
+     * @param theType Type of update from GameState
+     * @param theState GameState with update
+     */
+    private void onGameStateUpdate(final GameStateUpdateListener.UpdateType theType,
+                                   final GameState theState) {
+        updateListeners(GameModelUpdateListener.UpdateType.fromGameStateUpdate(theType));
+    }
 }
-
-
-
-

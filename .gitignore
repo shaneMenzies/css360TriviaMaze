@@ -26,3 +26,6 @@ replay_pid*
 # IntelliJ Idea config folder
 .idea/
 out/
+
+# Game Save Files
+*.ser

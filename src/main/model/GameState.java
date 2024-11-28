@@ -1,5 +1,6 @@
 package model;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,8 +49,11 @@ public final class GameState implements Serializable {
 
     /**
      * Update listeners for the entire game state.
+     * Transient to prevent external listeners from getting brought
+     * into serialization.
+     * Gets restored to an empty list when deserialized.
      */
-    private final List<GameStateUpdateListener> myListeners;
+    private transient List<GameStateUpdateListener> myListeners;
 
     /**
      * Current phase of this game.
@@ -235,6 +239,22 @@ public final class GameState implements Serializable {
         for (final GameStateUpdateListener listener : myListeners) {
             listener.doUpdate(theUpdateType, this);
         }
+    }
+
+    /**
+     * Override of Serialization's default readObject to make
+     * sure that the listeners gets recreated.
+     *
+     * @param in ObjectInputStream to read from.
+     * @throws IOException See java.io.ObjectInputStream.defaultReadObject()
+     * @throws ClassNotFoundException See java.io.ObjectInputStream.defaultReadObject()
+     */
+    @Serial
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        myListeners = new ArrayList<>();
     }
 
     /**

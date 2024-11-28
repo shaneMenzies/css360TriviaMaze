@@ -1,12 +1,17 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * Represents a trivia question and its associated answer.
  *
  * @author Shane Menzies
  * @version 10/25/24
  */
-public class TriviaQuestion {
+public class TriviaQuestion implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Question part of this question.
