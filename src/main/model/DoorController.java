@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import model.enums.TileID;
@@ -13,7 +15,9 @@ import model.interfaces.Tile;
  * @author Shane Menzies
  * @version 11/10/24
  */
-public final class DoorController {
+public final class DoorController implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * Exception message for an invalid question result.
