@@ -1,7 +1,7 @@
 package view;
 
 import model.Coordinates;
-import model.GameState;
+import model.GameModel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,8 +26,8 @@ public class PlayerView {
     /** BufferedImages for the players sprite different positions. */
     private BufferedImage myPlayerUp, myPlayerDown, myPlayerRight, myPlayerLeft;
 
-    /** Current game state. */
-    private final GameState myGameState;
+    /** Current game model. */
+    private final GameModel myGameModel;
 
     /**
      * Constructs a PlayerView instance with the specified game panel and player manager.
@@ -35,10 +35,10 @@ public class PlayerView {
      * @param theGamePanel where the player is displayed.
      * @param thePlayerListener handling player input.
      */
-    public PlayerView(final GameplayPanel theGamePanel, final PlayerManager thePlayerListener) {
+    public PlayerView(final GameplayPanel theGamePanel, final PlayerManager thePlayerListener, final GameModel theGameModel) {
         myPlayerListener = thePlayerListener;
         myGamePanel = theGamePanel;
-        myGameState = myGamePanel.getGameState();
+        myGameModel = theGameModel;
 
         getPlayerImage();
     }
@@ -59,7 +59,7 @@ public class PlayerView {
 
     /** renders player in new position. */
     public void update() {
-        myPlayerListener.update(myGameState);
+        myPlayerListener.update(myGameModel.getState());
     }
 
     /**
@@ -75,9 +75,9 @@ public class PlayerView {
             case LEFT -> myPlayerLeft;
         };
 
-        Coordinates myPosition = myGameState.getPlayer().getPosition();
-        final int   roomWidth  = myGameState.getMaze().getRoom(0, 0).getWidth();
-        final int roomHeight = myGameState.getMaze().getRoom(0, 0).getHeight();
+        Coordinates myPosition = myGameModel.getState().getPlayer().getPosition();
+        final int roomWidth  = myGameModel.getState().getMaze().getRoom(0, 0).getWidth();
+        final int roomHeight = myGameModel.getState().getMaze().getRoom(0, 0).getHeight();
 
         final int playerX = (myPosition.getRoomX() * roomWidth) + myPosition.getX();
         final int playerY = (myPosition.getRoomY() * roomHeight) + myPosition.getY();

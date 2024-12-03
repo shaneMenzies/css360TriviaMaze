@@ -13,7 +13,7 @@ import model.enums.TileID;
  * @author Shane Menzies
  * @version 11/24/24
  */
-public class SpriteMap extends EnumMap<TileID, Image> {
+public final class SpriteMap extends EnumMap<TileID, Image> {
 
     /**
      * Directory to find the tile images in.
@@ -58,7 +58,7 @@ public class SpriteMap extends EnumMap<TileID, Image> {
             myFallBackImage = ImageIO.read(
                     new File(IMAGE_DIRECTORY + FALLBACK_IMAGE_NAME + IMAGE_EXTENSION)
             );
-        } catch (IOException exception) {
+        } catch (final IOException exception) {
             throw new RuntimeException(FALLBACK_IMAGE_NOT_FOUND);
         }
 
@@ -84,7 +84,7 @@ public class SpriteMap extends EnumMap<TileID, Image> {
                 sprite = ImageIO.read(
                         new File(IMAGE_DIRECTORY + nextTile.toString() + IMAGE_EXTENSION)
                 );
-            } catch (IOException exception) {
+            } catch (final IOException exception) {
                 sprite = myFallBackImage;
             }
 

@@ -5,7 +5,6 @@ import javax.swing.*;
 import model.*;
 import model.enums.GamePlayPhase;
 import model.enums.TileID;
-import model.interfaces.MazeGenerator;
 
 /**
  * GameplayPanel represents the main game area.
@@ -16,16 +15,11 @@ import model.interfaces.MazeGenerator;
  */
 public class GameplayPanel extends JPanel {
 
-    /**
-     * Target update frame rate.
-     */
+    /** Target update frame rate. */
     private static final int TARGET_FPS = 60;
 
     /** Height of a single tile. */
     private int myTileHeight, myTileWidth;
-
-    /** GameState object representing the state of the game. */
-    private final GameState myGameState;
 
     /** Manages player input and actions. */
     private final PlayerManager myPlayerManager;
@@ -33,29 +27,16 @@ public class GameplayPanel extends JPanel {
     /** PlayerView instance to render the player. */
     private final PlayerView myPlayerView;
 
-    /** Maze instance. */
-    private final Maze myMaze;
+    /** Object for game logic. */
+    private final GameModel myGameModel;
 
-    /** Generator for rectangular maze.*/
-    private final RectangleMazeGenerator myRMG;
+    /** Constructs a game panel. */
+    public GameplayPanel(final GameModel theGameModel) {
 
-    /** Game settings. */
-    private final GameSettings mySettings;
-
-    /**
-     * Constructs a game panel.
-     */
-    public GameplayPanel() {
-        mySettings = new GameSettings(3, 10, -10);
-
-        myRMG = new RectangleMazeGenerator(6, 6,
-                5, 5,
-                QuestionsDatabase.getInstance());
-        myMaze = myRMG.generate();
-        myGameState = new GameState(mySettings, myMaze);
+        myGameModel = theGameModel;
         myPlayerManager = new PlayerManager();
-        myPlayerView = new PlayerView(this, myPlayerManager);
-        myGameState.setPhase(GamePlayPhase.IN_PROGRESS);
+        myPlayerView = new PlayerView(this, myPlayerManager, theGameModel);
+        theGameModel.getState().setPhase(GamePlayPhase.IN_PROGRESS);
 
         myTileWidth = 0;
         myTileHeight = 0;
@@ -81,25 +62,27 @@ public class GameplayPanel extends JPanel {
         super.paintComponent(theGraphics);
         final Graphics2D g2D = (Graphics2D) theGraphics;
 
-        SpriteMap tileMap = SpriteMap.getInstance();
+        final SpriteMap tileMap = SpriteMap.getInstance();
 
-        int roomHeight = myMaze.getRoom(0, 0).getHeight();
-        int roomWidth = myMaze.getRoom(0, 0).getWidth();
+        final Maze maze = myGameModel.getState().getMaze();
 
-        int totalHeight = myMaze.getHeight() * roomHeight;
-        int totalWidth = myMaze.getWidth() * roomWidth;
+        final int roomHeight = maze.getRoom(0, 0).getHeight();
+        final int roomWidth = maze.getRoom(0, 0).getWidth();
+
+        final int totalHeight = maze.getHeight() * roomHeight;
+        final int totalWidth = maze.getWidth() * roomWidth;
 
         myTileHeight = (getHeight() / totalHeight);
         myTileWidth = (getWidth() / totalWidth);
 
         for (int y = totalHeight - 1; y >= 0; y--) {
-            for (int x = 0; x < (myMaze.getWidth() * roomWidth); x++) {
-                int roomX = x / roomWidth;
-                int roomY = y / roomHeight;
-                int tileX = x % roomWidth;
-                int tileY = y % roomHeight;
+            for (int x = 0; x < (maze.getWidth() * roomWidth); x++) {
+                final int roomX = x / roomWidth;
+                final int roomY = y / roomHeight;
+                final int tileX = x % roomWidth;
+                final int tileY = y % roomHeight;
 
-                final TileID tileID = myMaze.getRoom(roomX, roomY).getTile(tileX, tileY).getTileID();
+                final TileID tileID = maze.getRoom(roomX, roomY).getTile(tileX, tileY).getTileID();
                 final Image tileImage = tileMap.get(tileID);
 
                 g2D.drawImage(tileImage, x * myTileWidth, y * myTileHeight,
@@ -122,14 +105,7 @@ public class GameplayPanel extends JPanel {
     /** Updates the state of the game, including player movement and interactions. */
     private void refresh() {
         myPlayerView.update();
-    }
-
-    /** Getter for current game state.
-     *
-     * @return the current game state.
-     */
-    public GameState getGameState() {
-        return myGameState;
+        repaint();
     }
 
     /**
@@ -150,12 +126,4 @@ public class GameplayPanel extends JPanel {
         return myTileHeight;
     }
 
-    /**
-     * Getter for Maze Generator (Rectangular)
-     *
-     * @return the rectangular maze.
-     */
-    public MazeGenerator getMazeGenerator() {
-        return myRMG;
-    }
 }
