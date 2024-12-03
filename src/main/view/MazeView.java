@@ -1,11 +1,13 @@
 package view;
 
+import java.util.ArrayList;
 import model.GameModel;
 import model.Maze;
 import model.interfaces.GameModelUpdateListener;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * Class for rendering a view of the maze.
@@ -21,6 +23,8 @@ public final class MazeView {
     private int myTileHeight;
 
     private final GameModel myTargetModel;
+
+    private final List<RoomViewHook> myRoomViewHooks;
 
     private RoomView[][] myRoomViews;
 
@@ -45,9 +49,17 @@ public final class MazeView {
 
         myTargetModel.addUpdateListener(this::onGameModelUpdate);
 
+        myRoomViewHooks = new ArrayList<>();
+
         refresh();
     }
 
+    /**
+     * Sets the tile dimensions in pixels.
+     *
+     * @param theTileWidth Width of a tile in pixels.
+     * @param theTileHeight Height of a tile in pixels.
+     */
     public void setTileDimensions(final int theTileWidth, final int theTileHeight) {
         if (theTileHeight == 0
             || theTileWidth == 0) {
@@ -60,6 +72,34 @@ public final class MazeView {
         refresh();
     }
 
+    /**
+     * Add a new RoomViewHook.
+     *
+     * @param theHook The new RoomViewHook to add.
+     */
+    public void addRoomViewHook(final RoomViewHook theHook) {
+        myRoomViewHooks.add(theHook);
+        refresh();
+    }
+
+    /**
+     * Remove a previously added RoomViewHook.
+     *
+     * @param theHook The RoomViewHook to remove.
+     * @return True if successful, false if it failed.
+     */
+    public boolean removeRoomViewHook(final RoomViewHook theHook) {
+        final boolean result = myRoomViewHooks.remove(theHook);
+        refresh();
+
+        return result;
+    }
+
+    /**
+     * Renders an image view of the entire maze.
+     *
+     * @return Image of entire maze.
+     */
     public Image getFull() {
         final Maze target = myTargetModel.getState().getMaze();
 
@@ -74,7 +114,7 @@ public final class MazeView {
 
         int imageY = 0;
         int imageX = 0;
-        for (int roomY = 0; roomY < target.getHeight(); roomY++) {
+        for (int roomY = target.getHeight() - 1; roomY >= 0; roomY--) {
             for (int roomX = 0; roomX < target.getWidth(); roomX++) {
 
                 context.drawImage(myRoomViews[roomY][roomX].asImage(), imageX, imageY, null);
@@ -87,6 +127,15 @@ public final class MazeView {
         return image;
     }
 
+    /**
+     * Renders an image view of only a portion of the maze.
+     *
+     * @param theCenterRoomX Center room's X-coordinate.
+     * @param theCenterRoomY Center room's Y-coordinate.
+     * @param theImageWidth Width of the resulting image.
+     * @param theImageHeight Height of the resulting image.
+     * @return Image containing only the specified portion of the maze.
+     */
     public Image getPortion(final int theCenterRoomX, final int theCenterRoomY,
                             final int theImageWidth, final int theImageHeight) {
         final Maze target = myTargetModel.getState().getMaze();
@@ -137,7 +186,7 @@ public final class MazeView {
         }
 
         final Image sourceImage = getRoomRect(leftRoomBound, rightRoomBound,
-                                              topRoomBound, bottomRoomBound);
+                                              bottomRoomBound, topRoomBound);
 
         final BufferedImage image = new BufferedImage(theImageWidth, theImageHeight, BufferedImage.TYPE_INT_RGB);
         final Graphics2D context = image.createGraphics();
@@ -155,8 +204,17 @@ public final class MazeView {
         return image;
     }
 
-    public Image getRoomRect(final int theLeftBound, final int theRightBound,
-                              final int theTopBound, final int theBottomBound) {
+    /**
+     * Gets an image of only a specified range of rooms.
+     *
+     * @param theLeftBound Left bound, inclusive (lowest X-coordinate)
+     * @param theRightBound Right bound, inclusive (highest X-coordinate)
+     * @param theBottomBound Bottom bound, inclusive (lowest Y-coordinate)
+     * @param theTopBound Top bound, inclusive (highest Y-coordinate)
+     * @return Image of all the rooms inside specified bounds.
+     */
+    private Image getRoomRect(final int theLeftBound, final int theRightBound,
+                              final int theBottomBound, final int theTopBound) {
         final Maze target = myTargetModel.getState().getMaze();
 
         final int roomHeightTiles = target.getRoom(theLeftBound, theTopBound).getHeight();
@@ -183,6 +241,21 @@ public final class MazeView {
         return image;
     }
 
+    /**
+     * Run all the RoomViewHooks for a certain room.
+     *
+     * @param theGraphics Graphics2D handle for drawing.
+     * @param theRoom The RoomView being drawn.
+     */
+    private void runRoomViewHooks(final Graphics2D theGraphics, final RoomView theRoom) {
+        for (final RoomViewHook nextHook : myRoomViewHooks) {
+            nextHook.doHook(theGraphics, theRoom);
+        }
+    }
+
+    /**
+     * Refreshes all the contained RoomViews.
+     */
     private void refresh() {
         final Maze target = myTargetModel.getState().getMaze();
         final RoomView[][] newRooms = new RoomView[target.getHeight()][target.getWidth()];
@@ -190,8 +263,11 @@ public final class MazeView {
         // Initialize individual room views.
         for (int roomY = 0; roomY < target.getHeight(); roomY++) {
             for (int roomX = 0; roomX < target.getWidth(); roomX++) {
-                newRooms[roomY][roomX] = new RoomView(myTileWidth, myTileHeight,
+                final RoomView nextRoom = new RoomView(myTileWidth, myTileHeight,
                                                          myTargetModel, roomX, roomY);
+                runRoomViewHooks(nextRoom.asImage().createGraphics(),
+                                 nextRoom);
+                newRooms[roomY][roomX] = nextRoom;
             }
         }
 
@@ -206,14 +282,6 @@ public final class MazeView {
      */
     private void onGameModelUpdate(final GameModelUpdateListener.UpdateType theType,
                                    final GameModel theModel) {
-        switch (theType) {
-            case NEW_GAME, LOADED, GAME_STATE_DOORS:
-                // Need to remake view
-                refresh();
-                break;
-
-            default:
-                break;
-        }
+        refresh();
     }
 }

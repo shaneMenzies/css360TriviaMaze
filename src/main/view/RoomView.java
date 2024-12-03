@@ -21,13 +21,15 @@ public final class RoomView {
 
     private final int myRoomY;
 
-    private final GameModel myTargetModel;
+    private final GameModel myModel;
+
+    private final Room myRoom;
 
     private final int myTileWidth;
 
     private final int myTileHeight;
 
-    private Image myImage;
+    private BufferedImage myImage;
 
     /**
      * Creates a view of a single room.
@@ -51,13 +53,14 @@ public final class RoomView {
         if (theModel == null) {
             throw new IllegalArgumentException(NULL_MODEL);
         }
-        myTargetModel = theModel;
+        myModel = theModel;
 
-        if (myTargetModel.getState().getMaze().getRoom(theRoomX, theRoomY) == null) {
+        if (myModel.getState().getMaze().getRoom(theRoomX, theRoomY) == null) {
             throw new IllegalArgumentException(INVALID_ROOM);
         }
         myRoomX = theRoomX;
         myRoomY = theRoomY;
+        myRoom = myModel.getState().getMaze().getRoom(theRoomX, theRoomY);
 
         createInitialView();
     }
@@ -67,15 +70,69 @@ public final class RoomView {
      *
      * @return Image of this room's contents.
      */
-    public Image asImage() {
+    public BufferedImage asImage() {
         return myImage;
+    }
+
+    /**
+     * Get this RoomView's target room's X coordinate.
+     *
+     * @return This RoomView's target room's X coordinate.
+     */
+    public int getRoomX() {
+        return myRoomX;
+    }
+
+    /**
+     * Get this RoomView's target room's Y coordinate.
+     *
+     * @return This RoomView's target room's Y coordinate.
+     */
+    public int getRoomY() {
+        return myRoomY;
+    }
+
+    /**
+     * Get the GameModel this RoomView is based on.
+     *
+     * @return The source GameModel.
+     */
+    public GameModel getModel() {
+        return myModel;
+    }
+
+    /**
+     * Get the Room this RoomView is based on.
+     *
+     * @return The original Room.
+     */
+    public Room getRoom() {
+        return myRoom;
+    }
+
+    /**
+     * Get width of a tile in pixels.
+     *
+     * @return Tile width.
+     */
+    public int getTileWidth() {
+        return myTileWidth;
+    }
+
+    /**
+     * Get height of a tile in pixels.
+     *
+     * @return Tile height.
+     */
+    public int getTileHeight() {
+        return myTileHeight;
     }
 
     /**
      * Fills out this view's image representation of the room.
      */
     private void createInitialView() {
-        final Room room = myTargetModel.getState().getMaze().getRoom(myRoomX, myRoomY);
+        final Room room = myModel.getState().getMaze().getRoom(myRoomX, myRoomY);
 
         final int imageWidth = room.getWidth() * myTileWidth;
         final int imageHeight = room.getHeight() * myTileHeight;
@@ -87,7 +144,7 @@ public final class RoomView {
 
         int imageX = 0;
         int imageY = 0;
-        for (int tileY = 0; tileY < room.getHeight(); tileY++) {
+        for (int tileY = room.getHeight() - 1; tileY >= 0; tileY--) {
             for (int tileX = 0; tileX < room.getWidth(); tileX++) {
                 final TileID targetTile = room.getTile(tileX, tileY).getTileID();
                 final Image targetSprite = sprites.get(targetTile);
