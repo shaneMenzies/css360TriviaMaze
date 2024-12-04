@@ -1,35 +1,65 @@
 package view;
 
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+
 import model.GameModel;
 import model.Room;
 import model.enums.TileID;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static java.awt.image.BufferedImage.TYPE_INT_RGB;
-
 public final class RoomView {
 
-    private static final String ILLEGAL_TILE_DIMENSIONS = "Illegal tile dimensions provided!";
+    /**
+     * Error message for invalid tile dimensions being provided.
+     */
+    private static final String ILLEGAL_TILE_DIMENSIONS = "Illegal Tile Dimensions provided!";
 
+    /**
+     * Error message for a null GameModel being provided.
+     */
     private static final String NULL_MODEL = "Provided GameModel was null!";
 
-    private static final String INVALID_ROOM = "Provided room coordinates did not correspond to a valid room!";
+    /**
+     * Error message for an invalid Room being provided.
+     */
+    private static final String INVALID_ROOM =
+            "Provided room coordinates did not correspond to a valid room!";
 
+    /**
+     * X-coordinate of the target Room.
+     */
     private final int myRoomX;
 
+    /**
+     * Y-coordinate of the target Room.
+     */
     private final int myRoomY;
 
+    /**
+     * Target GameModel to source Room data from.
+     */
     private final GameModel myModel;
 
+    /**
+     * The target Room.
+     */
     private final Room myRoom;
 
+    /**
+     * Width of a tile in pixels.
+     */
     private final int myTileWidth;
 
+    /**
+     * Height of a tile in pixels.
+     */
     private final int myTileHeight;
 
-    private BufferedImage myImage;
+    /**
+     * Generated image of the target room.
+     */
+    private final BufferedImage myImage;
 
     /**
      * Creates a view of a single room.
@@ -62,7 +92,7 @@ public final class RoomView {
         myRoomY = theRoomY;
         myRoom = myModel.getState().getMaze().getRoom(theRoomX, theRoomY);
 
-        createInitialView();
+        myImage = createInitialView();
     }
 
     /**
@@ -131,7 +161,7 @@ public final class RoomView {
     /**
      * Fills out this view's image representation of the room.
      */
-    private void createInitialView() {
+    private BufferedImage createInitialView() {
         final Room room = myModel.getState().getMaze().getRoom(myRoomX, myRoomY);
 
         final int imageWidth = room.getWidth() * myTileWidth;
@@ -140,7 +170,7 @@ public final class RoomView {
         final BufferedImage image = new BufferedImage(imageWidth, imageHeight, TYPE_INT_RGB);
         final Graphics2D context = image.createGraphics();
 
-        SpriteMap sprites = SpriteMap.getInstance();
+        final SpriteMap sprites = SpriteMap.getInstance();
 
         int imageX = 0;
         int imageY = 0;
@@ -159,6 +189,6 @@ public final class RoomView {
 
         context.dispose();
 
-        myImage = image;
+        return image;
     }
 }

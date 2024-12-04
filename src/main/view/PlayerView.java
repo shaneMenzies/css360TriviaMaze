@@ -69,7 +69,7 @@ public class PlayerView {
     /**
      * RoomViewHook to draw the player on top of the room they're in.
      */
-    private class MyRoomViewHook implements RoomViewHook {
+    private final class MyRoomViewHook implements RoomViewHook {
         @Override
         public void doHook(final Graphics2D theGraphics, final RoomView theRoom) {
             final Coordinates playerPos = myGameModel.getState().getPlayer().getPosition();

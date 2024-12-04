@@ -246,14 +246,14 @@ public final class GameState implements Serializable {
      * Override of Serialization's default readObject to make
      * sure that the listeners gets recreated.
      *
-     * @param in ObjectInputStream to read from.
+     * @param theIn ObjectInputStream to read from.
      * @throws IOException See java.io.ObjectInputStream.defaultReadObject()
      * @throws ClassNotFoundException See java.io.ObjectInputStream.defaultReadObject()
      */
     @Serial
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(final java.io.ObjectInputStream theIn)
             throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
+        theIn.defaultReadObject();
 
         myListeners = new ArrayList<>();
     }

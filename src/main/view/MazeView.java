@@ -4,28 +4,51 @@ import java.util.ArrayList;
 import model.GameModel;
 import model.Maze;
 import model.interfaces.GameModelUpdateListener;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
  * Class for rendering a view of the maze.
+ *
+ * @author Shane Menzies
+ * @version 12/3/24
  */
 public final class MazeView {
 
+    /**
+     * Error message for invalid tile dimensions being provided.
+     */
     private static final String ILLEGAL_TILE_DIMENSIONS = "Illegal Tile Dimensions provided!";
 
+    /**
+     * Error message for a null GameModel being provided.
+     */
     private static final String NULL_MODEL = "Provided GameModel was null!";
 
+    /**
+     * Current width of each tile in pixels.
+     */
     private int myTileWidth;
 
+    /**
+     * Current height of each tile in pixels.
+     */
     private int myTileHeight;
 
+    /**
+     * GameModel to retrieve Maze from.
+     */
     private final GameModel myTargetModel;
 
+    /**
+     * List of RoomViewHooks to run on each RoomView.
+     */
     private final List<RoomViewHook> myRoomViewHooks;
 
+    /**
+     * RoomViews for each Room in the Maze.
+     */
     private RoomView[][] myRoomViews;
 
     /**
@@ -35,7 +58,8 @@ public final class MazeView {
      * @param theTileHeight Height of tiles (in pixels).
      * @param theModel GameModel to track, containing the maze to render.
      */
-    public MazeView(final int theTileWidth, final int theTileHeight, final GameModel theModel) {
+    public MazeView(final int theTileWidth, final int theTileHeight,
+                    final GameModel theModel) {
         if (theTileWidth == 0
             || theTileHeight == 0) {
             throw new IllegalArgumentException(ILLEGAL_TILE_DIMENSIONS);
@@ -109,7 +133,8 @@ public final class MazeView {
         final int imageHeight = target.getHeight() * roomHeightTiles * myTileHeight;
         final int imageWidth = target.getWidth() * roomWidthTiles * myTileWidth;
 
-        final BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image
+                = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
         final Graphics2D context = image.createGraphics();
 
         int imageY = 0;
@@ -117,7 +142,8 @@ public final class MazeView {
         for (int roomY = target.getHeight() - 1; roomY >= 0; roomY--) {
             for (int roomX = 0; roomX < target.getWidth(); roomX++) {
 
-                context.drawImage(myRoomViews[roomY][roomX].asImage(), imageX, imageY, null);
+                context.drawImage(myRoomViews[roomY][roomX].asImage(),
+                                  imageX, imageY, null);
                 imageX += roomWidthTiles * myTileWidth;
             }
             imageX = 0;
@@ -140,8 +166,10 @@ public final class MazeView {
                             final int theImageWidth, final int theImageHeight) {
         final Maze target = myTargetModel.getState().getMaze();
 
-        final int roomWidthTiles = target.getRoom(theCenterRoomX, theCenterRoomY).getWidth();
-        final int roomHeightTiles = target.getRoom(theCenterRoomX, theCenterRoomY).getHeight();
+        final int roomWidthTiles
+                = target.getRoom(theCenterRoomX, theCenterRoomY).getWidth();
+        final int roomHeightTiles
+                = target.getRoom(theCenterRoomX, theCenterRoomY).getHeight();
 
         final int roomImageHeight = roomHeightTiles * myTileHeight;
         final int roomImageWidth = roomWidthTiles * myTileWidth;
@@ -188,16 +216,19 @@ public final class MazeView {
         final Image sourceImage = getRoomRect(leftRoomBound, rightRoomBound,
                                               bottomRoomBound, topRoomBound);
 
-        final BufferedImage image = new BufferedImage(theImageWidth, theImageHeight, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image = new BufferedImage(theImageWidth, theImageHeight,
+                                                      BufferedImage.TYPE_INT_RGB);
         final Graphics2D context = image.createGraphics();
 
-        int sourceLeft = -(leftRemaining);
-        int sourceRight = sourceLeft + theImageWidth;
-        int sourceTop = -(topRemaining);
-        int sourceBottom = sourceTop + theImageHeight;
+        final int sourceLeft = -leftRemaining;
+        final int sourceRight = sourceLeft + theImageWidth;
+        final int sourceTop = -topRemaining;
+        final int sourceBottom = sourceTop + theImageHeight;
 
-        context.drawImage(sourceImage, 0, 0, theImageWidth - 1, theImageHeight - 1,
-                          sourceLeft, sourceTop, sourceRight, sourceBottom, null);
+        context.drawImage(sourceImage, 0, 0,
+                          theImageWidth - 1, theImageHeight - 1,
+                          sourceLeft, sourceTop,
+                          sourceRight, sourceBottom, null);
 
         context.dispose();
 
@@ -220,10 +251,13 @@ public final class MazeView {
         final int roomHeightTiles = target.getRoom(theLeftBound, theTopBound).getHeight();
         final int roomWidthTiles = target.getRoom(theLeftBound, theTopBound).getWidth();
 
-        final int imageHeight = (theTopBound - theBottomBound + 1) * roomHeightTiles * myTileHeight;
-        final int imageWidth = (theRightBound - theLeftBound + 1) * roomWidthTiles * myTileWidth;
+        final int imageHeight = (theTopBound - theBottomBound + 1)
+                                * roomHeightTiles * myTileHeight;
+        final int imageWidth = (theRightBound - theLeftBound + 1)
+                               * roomWidthTiles * myTileWidth;
 
-        final BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image = new BufferedImage(imageWidth, imageHeight,
+                                                      BufferedImage.TYPE_INT_RGB);
         final Graphics2D context = image.createGraphics();
 
         int imageY = 0;
@@ -231,7 +265,8 @@ public final class MazeView {
         for (int roomY = theTopBound; roomY >= theBottomBound; roomY--) {
             for (int roomX = theLeftBound; roomX <= theRightBound; roomX++) {
 
-                context.drawImage(myRoomViews[roomY][roomX].asImage(), imageX, imageY, null);
+                context.drawImage(myRoomViews[roomY][roomX].asImage(),
+                                  imageX, imageY, null);
                 imageX += roomWidthTiles * myTileWidth;
             }
             imageX = 0;
@@ -258,7 +293,8 @@ public final class MazeView {
      */
     private void refresh() {
         final Maze target = myTargetModel.getState().getMaze();
-        final RoomView[][] newRooms = new RoomView[target.getHeight()][target.getWidth()];
+        final RoomView[][] newRooms
+                = new RoomView[target.getHeight()][target.getWidth()];
 
         // Initialize individual room views.
         for (int roomY = 0; roomY < target.getHeight(); roomY++) {
