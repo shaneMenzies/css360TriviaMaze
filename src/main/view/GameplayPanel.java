@@ -4,7 +4,6 @@ import java.awt.*;
 import javax.swing.*;
 import model.*;
 import model.enums.GamePlayPhase;
-import model.enums.TileID;
 
 /**
  * GameplayPanel represents the main game area.
@@ -24,6 +23,9 @@ public class GameplayPanel extends JPanel {
     /** Manages player input and actions. */
     private final PlayerManager myPlayerManager;
 
+    /** MazeView instance to render the maze. */
+    private final MazeView myMazeView;
+
     /** PlayerView instance to render the player. */
     private final PlayerView myPlayerView;
 
@@ -33,13 +35,17 @@ public class GameplayPanel extends JPanel {
     /** Constructs a game panel. */
     public GameplayPanel(final GameModel theGameModel) {
 
-        myGameModel = theGameModel;
-        myPlayerManager = new PlayerManager();
-        myPlayerView = new PlayerView(this, myPlayerManager, theGameModel);
-        theGameModel.getState().setPhase(GamePlayPhase.IN_PROGRESS);
+        myTileWidth = 50;
+        myTileHeight = 50;
 
-        myTileWidth = 0;
-        myTileHeight = 0;
+        myGameModel = theGameModel;
+        myPlayerManager = new PlayerManager(myGameModel);
+        myMazeView = new MazeView(myTileWidth, myTileHeight, myGameModel);
+        myPlayerView = new PlayerView(myPlayerManager, myGameModel);
+
+        myMazeView.addRoomViewHook(myPlayerView.getRoomViewHook());
+
+        theGameModel.getState().setPhase(GamePlayPhase.IN_PROGRESS);
 
         mainGameWindow();
         startGameThread();
@@ -62,35 +68,12 @@ public class GameplayPanel extends JPanel {
         super.paintComponent(theGraphics);
         final Graphics2D g2D = (Graphics2D) theGraphics;
 
-        final SpriteMap tileMap = SpriteMap.getInstance();
+        final Coordinates playerPos = myGameModel.getState().getPlayer().getPosition();
 
-        final Maze maze = myGameModel.getState().getMaze();
+        final Image mazeImage = myMazeView.getPortion(playerPos.getRoomX(), playerPos.getRoomY(),
+                                                      super.getWidth(), super.getHeight());
 
-        final int roomHeight = maze.getRoom(0, 0).getHeight();
-        final int roomWidth = maze.getRoom(0, 0).getWidth();
-
-        final int totalHeight = maze.getHeight() * roomHeight;
-        final int totalWidth = maze.getWidth() * roomWidth;
-
-        myTileHeight = (getHeight() / totalHeight);
-        myTileWidth = (getWidth() / totalWidth);
-
-        for (int y = totalHeight - 1; y >= 0; y--) {
-            for (int x = 0; x < (maze.getWidth() * roomWidth); x++) {
-                final int roomX = x / roomWidth;
-                final int roomY = y / roomHeight;
-                final int tileX = x % roomWidth;
-                final int tileY = y % roomHeight;
-
-                final TileID tileID = maze.getRoom(roomX, roomY).getTile(tileX, tileY).getTileID();
-                final Image tileImage = tileMap.get(tileID);
-
-                g2D.drawImage(tileImage, x * myTileWidth, y * myTileHeight,
-                        myTileWidth, myTileHeight, null);
-            }
-        }
-
-        myPlayerView.draw(g2D);
+        g2D.drawImage(mazeImage, 0, 0, super.getWidth(), super.getHeight(), null);
 
         g2D.dispose();
     }
@@ -104,7 +87,6 @@ public class GameplayPanel extends JPanel {
 
     /** Updates the state of the game, including player movement and interactions. */
     private void refresh() {
-        myPlayerView.update();
         repaint();
     }
 

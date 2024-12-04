@@ -47,14 +47,14 @@ public interface GameModelUpdateListener {
 
         public static UpdateType fromGameStateUpdate(
                 final GameStateUpdateListener.UpdateType theType) {
-           return switch (theType) {
-               case PHASE:
-                   yield GAME_STATE_PHASE;
-               case PLAYER:
-                   yield GAME_STATE_PLAYER;
-               case DOORS:
-                   yield GAME_STATE_DOORS;
-           };
+            return switch (theType) {
+                case PHASE:
+                    yield GAME_STATE_PHASE;
+                case PLAYER:
+                    yield GAME_STATE_PLAYER;
+                case DOORS:
+                    yield GAME_STATE_DOORS;
+            };
         }
     }
 }

@@ -79,10 +79,11 @@ public final class GameState implements Serializable {
 
         // Make and link the question controller.
         myQuestionController = new QuestionController();
-        myQuestionController.addListener(new QuestionControllerListener());
+        myQuestionController.addListener(this::handleQuestionControllerUpdate);
         if (myMaze.getDoors() != null) {
             for (final DoorController nextDoor : myMaze.getDoors()) {
                 nextDoor.setHandler(myQuestionController);
+                nextDoor.addUpdateListener(this::handleDoorUpdate);
             }
         }
 
@@ -245,14 +246,14 @@ public final class GameState implements Serializable {
      * Override of Serialization's default readObject to make
      * sure that the listeners gets recreated.
      *
-     * @param in ObjectInputStream to read from.
+     * @param theIn ObjectInputStream to read from.
      * @throws IOException See java.io.ObjectInputStream.defaultReadObject()
      * @throws ClassNotFoundException See java.io.ObjectInputStream.defaultReadObject()
      */
     @Serial
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(final java.io.ObjectInputStream theIn)
             throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
+        theIn.defaultReadObject();
 
         myListeners = new ArrayList<>();
     }
@@ -263,7 +264,8 @@ public final class GameState implements Serializable {
      * @param theUpdateType The type of update in the QuestionController.
      */
     private void handleQuestionControllerUpdate(
-            final QuestionControllerUpdateListener.UpdateType theUpdateType) {
+            final QuestionControllerUpdateListener.UpdateType theUpdateType,
+            final QuestionController theController) {
         switch (theUpdateType) {
             case NEW_QUESTION:
                 myStoredPhase = myPlayPhase;
@@ -295,16 +297,11 @@ public final class GameState implements Serializable {
     }
 
     /**
-     * Basic update listener for this game state to listen to updates from
-     * the QuestionController.
+     * Handles an update from any door.
+     *
+     * @param theController Door controller which updated.
      */
-    private final class QuestionControllerListener
-            implements QuestionControllerUpdateListener {
-        @Override
-        public void doUpdate(
-                final QuestionControllerUpdateListener.UpdateType theUpdateType,
-                final QuestionController theQuestionController) {
-            handleQuestionControllerUpdate(theUpdateType);
-        }
+    private void handleDoorUpdate(final DoorController theController) {
+        updateListeners(GameStateUpdateListener.UpdateType.DOORS);
     }
 }

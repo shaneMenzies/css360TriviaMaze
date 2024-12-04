@@ -1,5 +1,6 @@
 package model.interfaces;
 
+import java.io.Serializable;
 import model.DoorController;
 
 /**
@@ -8,7 +9,7 @@ import model.DoorController;
  * @author Shane Menzies
  * @version 10/27/24
  */
-public interface DoorUpdateListener {
+public interface DoorUpdateListener extends Serializable {
 
     /**
      * Performs some function after the linked DoorController's state has updated.

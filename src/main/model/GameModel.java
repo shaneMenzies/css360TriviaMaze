@@ -1,8 +1,6 @@
 package model;
 
-import static model.interfaces.GameModelUpdateListener.UpdateType.LOADED;
-import static model.interfaces.GameModelUpdateListener.UpdateType.NEW_GAME;
-import static model.interfaces.GameModelUpdateListener.UpdateType.SAVED;
+import static model.interfaces.GameModelUpdateListener.UpdateType.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +111,9 @@ public class GameModel {
         myState.addUpdateListener(this::onGameStateUpdate);
 
         updateListeners(LOADED);
+        updateListeners(GAME_STATE_PLAYER);
+        updateListeners(GAME_STATE_DOORS);
+        updateListeners(GAME_STATE_PHASE);
     }
 
     /**
