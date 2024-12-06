@@ -2,6 +2,7 @@ package controller;
 
 import model.GameModel;
 import view.GameplayFrame;
+
 import javax.swing.*;
 
 /**
@@ -54,6 +55,14 @@ public class GameOperations {
     public void loadGame() {
         try {
             myGameModel.loadGame();
+
+            myGameFrame.getMainGameMusic().getMusicStop();
+            myGameFrame.getMainGameMusic().getMusic("resources/sounds/game_bgm.wav");
+
+            myGameFrame.getOutcome().setVisible(false);
+            myGameFrame.getGamePanel().setVisible(true);
+
+            myGameFrame.getGamePanel().requestFocusInWindow();
 
             JOptionPane.showMessageDialog(myGameFrame,
                     "Game loaded successfully!",

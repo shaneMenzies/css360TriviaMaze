@@ -17,17 +17,20 @@ import javax.swing.*;
  */
 public class GameplayFrame extends JFrame {
 
-    /** Panel for trivia questions. */
-    private final QuestionsPanel myQuestionsPanel;
+    /** Game operations object to track state of save, load and new game. */
+    private final GameOperations myGameOp;
 
     /** Game panel for main maze gameplay. */
     private final GameplayPanel myGamePanel;
 
-    /** Game operations object to track state of save, load and new game. */
-    private final GameOperations myGameOp;
+    /** Panel for trivia questions. */
+    private final QuestionsPanel myQuestionsPanel;
 
     /** Stats panel object for Player lives and score. */
     private final StatsPanel myStats;
+
+    /** Outcome panel object to handle win/lose screens. */
+    private final OutcomePanel myOutcome;
 
     /** Main game window frame. */
     private final JFrame myGameFrame;
@@ -59,6 +62,7 @@ public class GameplayFrame extends JFrame {
         myGamePanel = new GameplayPanel(theGameModel);
         myQuestionsPanel = new QuestionsPanel(theGameModel);
         myStats = new StatsPanel(theGameModel);
+        myOutcome = new OutcomePanel();
 
         setUpGUI();
 
@@ -123,10 +127,10 @@ public class GameplayFrame extends JFrame {
 
         gameInstructions.addActionListener(e -> JOptionPane.showMessageDialog(myGameFrame, """
                 Navigation:                         Objective:
-                W ➜ Move Player Up                  To win level up, you must navigate through out a maze
-                A ➜ Move Player Left                but in order to enter a new room, you have to answer a
-                S ➜ Move Player Down                trivia question... answer wrong, and the door is locked.
-                D ➜ Move Player Right               If all doors become locked, it's game over.
+                W ➜ Move Player Up                  To win, you must navigate through out the maze answering
+                A ➜ Move Player Left                questions correctly to enter a new room. Answer wrong, and
+                S ➜ Move Player Down                the door is locked and the player loses a life. If the player
+                D ➜ Move Player Right               loses all their lives, game over!
                 """));
 
         myFile.add(newGame);
@@ -169,7 +173,7 @@ public class GameplayFrame extends JFrame {
 
     /** Stats panel for player lives, score and displays player image. */
     private void statsPanel() {
-        final ImageIcon icon = scaleImage("resources/images/player_down.png", 100, 100);
+        final ImageIcon icon = scaleImage("resources/images/player/player_down.png", 100, 100);
         final JLabel iconLabel = new JLabel(icon);
         iconLabel.setBounds(700, 450, 100, 180);
 
@@ -187,6 +191,28 @@ public class GameplayFrame extends JFrame {
         return new ImageIcon(scaledImage);
     }
 
+    /** Handles visuals and sounds for when player wins game. */
+    private void victory() {
+        myMusic.getMusicStop();
+        myMusic.getMusic("resources/sounds/victory.wav");
+        myGamePanel.setVisible(false);
+
+        myOutcome.winScreen();
+        myPanel.add(myOutcome);
+        myOutcome.setVisible(true);
+    }
+
+    /** Handles visuals and sounds for when player loses game. */
+    private void gameOver() {
+        myMusic.getMusicStop();
+        myMusic.getMusic("resources/sounds/game_over.wav");
+        myGamePanel.setVisible(false);
+
+        myOutcome.endScreen();
+        myPanel.add(myOutcome);
+        myOutcome.setVisible(true);
+    }
+
     /**
      * Handles updates to the game model to hide question panel and reveal it
      * depending on the game phase.
@@ -198,7 +224,6 @@ public class GameplayFrame extends JFrame {
         if (theUpdateType == GameModelUpdateListener.UpdateType.GAME_STATE_PHASE) {
             final GamePlayPhase currentPhase = theGameModel.getState().getPhase();
             if (currentPhase == GamePlayPhase.TRIVIA) {
-
                 myLogoLabel.setVisible(false);
                 myQuestionsPanel.setVisible(true);
                 myQuestionsPanel.setBackground(Color.BLACK);
@@ -208,6 +233,14 @@ public class GameplayFrame extends JFrame {
                 myQuestionsPanel.setVisible(false);
                 myLogoLabel.setVisible(true);
                 myStats.updateStats();
+            }
+
+            if (currentPhase == GamePlayPhase.VICTORY) {
+                victory();
+            }
+
+            if (currentPhase == GamePlayPhase.FAILURE) {
+                gameOver();
             }
 
             myStats.updateStats();
@@ -220,5 +253,23 @@ public class GameplayFrame extends JFrame {
     /** Getter for background music. */
     public Music getMainGameMusic() {
         return myMusic;
+    }
+
+    /**
+     * Getter for the outcome panel object.
+     *
+     * @return the outcome panel.
+     */
+    public OutcomePanel getOutcome() {
+        return myOutcome;
+    }
+
+    /**
+     * Getter for the game panel object.
+     *
+     * @return the game panel.
+     */
+    public GameplayPanel getGamePanel() {
+        return myGamePanel;
     }
 }

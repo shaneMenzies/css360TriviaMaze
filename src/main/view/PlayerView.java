@@ -30,7 +30,7 @@ public class PlayerView {
      * Constructs a PlayerView instance with the specified game panel and player manager.
      *
      * @param thePlayerListener handling player input.
-     * @param theGameModel Game Model to proc
+     * @param theGameModel Game Model to program.
      */
     public PlayerView(final PlayerManager thePlayerListener, final GameModel theGameModel) {
         myPlayerListener = thePlayerListener;
@@ -39,6 +39,11 @@ public class PlayerView {
         loadPlayerImages();
     }
 
+    /**
+     * Getter for RoomView Hook.
+     *
+     * @return the room view hook.
+     */
     public RoomViewHook getRoomViewHook() {
         return new MyRoomViewHook();
     }
@@ -46,17 +51,22 @@ public class PlayerView {
     /** Gets the players sprites from image files. */
     private void loadPlayerImages() {
         try {
-            myPlayerUp = ImageIO.read(new File("resources/images/player_up.png"));
-            myPlayerDown = ImageIO.read(new File("resources/images/player_down.png"));
-            myPlayerRight = ImageIO.read(new File("resources/images/player_right.png"));
-            myPlayerLeft = ImageIO.read(new File("resources/images/player_left.png"));
+            myPlayerUp = ImageIO.read(new File("resources/images/player/player_up.png"));
+            myPlayerDown = ImageIO.read(new File("resources/images/player/player_down.png"));
+            myPlayerRight = ImageIO.read(new File("resources/images/player/player_right.png"));
+            myPlayerLeft = ImageIO.read(new File("resources/images/player/player_left.png"));
 
 
         } catch (final IOException ioException) {
-            ioException.printStackTrace();
+            throw new RuntimeException(ioException);
         }
     }
 
+    /**
+     * Getter for the characters image.
+     *
+     * @return the player image for the corresponding direction.
+     */
     private Image getPlayerImage() {
         return switch (myPlayerListener.getDirection()) {
             case UP -> myPlayerUp;
