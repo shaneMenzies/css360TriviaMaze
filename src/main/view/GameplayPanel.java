@@ -1,9 +1,6 @@
 package view;
 
 import java.awt.*;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import model.*;
 import model.enums.GamePlayPhase;

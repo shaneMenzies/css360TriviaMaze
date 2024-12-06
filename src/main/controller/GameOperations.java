@@ -2,7 +2,6 @@ package controller;
 
 import model.GameModel;
 import view.GameplayFrame;
-import view.OutcomePanel;
 
 import javax.swing.*;
 
