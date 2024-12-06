@@ -78,11 +78,11 @@ public class StatsPanel {
 
     /** Updates players lives and score through game play. */
     public void updateStats() {
-        myLives.setText("Lives: " + myGameModel.getState().getPlayer().getLives());
-        myScore.setText("Score: " + myGameModel.getState().getPlayer().getScore());
+            myLives.setText("Lives: " + myGameModel.getState().getPlayer().getLives());
+            myScore.setText("Score: " + myGameModel.getState().getPlayer().getScore());
 
-        myLives.repaint();
-        myScore.repaint();
+            myLives.repaint();
+            myScore.repaint();
     }
 
     /** Getter for lives text field. */

@@ -1,6 +1,9 @@
 package view;
 
 import java.awt.*;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import model.*;
 import model.enums.GamePlayPhase;
@@ -18,7 +21,10 @@ public class GameplayPanel extends JPanel {
     private static final int TARGET_FPS = 60;
 
     /** Height of a single tile. */
-    private int myTileHeight, myTileWidth;
+    private final static int TILE_HEIGHT = 50;
+
+    /** Width of a single tile. */
+    private final static int TILE_WIDTH = 50;
 
     /** Manages player input and actions. */
     private final PlayerManager myPlayerManager;
@@ -34,16 +40,13 @@ public class GameplayPanel extends JPanel {
 
     /** Constructs a game panel. */
     public GameplayPanel(final GameModel theGameModel) {
-
-        myTileWidth = 50;
-        myTileHeight = 50;
-
         myGameModel = theGameModel;
         myPlayerManager = new PlayerManager(myGameModel);
-        myMazeView = new MazeView(myTileWidth, myTileHeight, myGameModel);
+        myMazeView = new MazeView(TILE_WIDTH, TILE_HEIGHT, myGameModel);
         myPlayerView = new PlayerView(myPlayerManager, myGameModel);
 
         myMazeView.addRoomViewHook(myPlayerView.getRoomViewHook());
+        myMazeView.addRoomViewHook(new ExitViewHook());
 
         theGameModel.getState().setPhase(GamePlayPhase.IN_PROGRESS);
 
@@ -80,7 +83,6 @@ public class GameplayPanel extends JPanel {
 
     /** Starts game loop in a separate thread. */
     private void startGameThread() {
-        // Target delay (in milliseconds)
         final int delay = 1000 / TARGET_FPS;
         new Timer(delay, ActionListener -> refresh()).start();
     }
@@ -91,21 +93,30 @@ public class GameplayPanel extends JPanel {
     }
 
     /**
-     * Returns width of a single tile.
-     *
-     * @return tile width.
+     * RoomViewHook to draw the maze's exit door.
      */
-    public int getTileWidth() {
-        return myTileWidth;
-    }
+    private final class ExitViewHook implements RoomViewHook {
+        @Override
+        public void doHook(final Graphics2D theGraphics, final RoomView theRoom) {
+            final int exitX = myGameModel.getState().getMaze().getExitRoomX();
+            final int exitY = myGameModel.getState().getMaze().getExitRoomY();
 
-    /**
-     * Returns height of a single tile.
-     *
-     * @return tile height.
-     */
-    public int getTileHeight() {
-        return myTileHeight;
+            final int exitTileX = 2;
+            final int exitTileY = 2;
+
+            final Image exitDoor = new ImageIcon("resources/images/exit_door.png").getImage();
+
+            if (theRoom.getRoomX() == exitX && theRoom.getRoomY() == exitY) {
+
+                final int imageX = exitTileX * theRoom.getTileWidth();
+                final int imageY = (theRoom.getRoom().getHeight() - 1 - exitTileY)
+                        * theRoom.getTileHeight();
+
+                theGraphics.drawImage(exitDoor, imageX, imageY,
+                        theRoom.getTileWidth(), theRoom.getTileHeight(),
+                        null);
+            }
+        }
     }
 
 }
