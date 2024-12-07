@@ -6,6 +6,7 @@ import model.RectangleMazeGenerator;
 import view.TitleScreen;
 
 public final class TriviaMazeMain {
+
     /**
      * Private constructor to prevent instantiation.
      */

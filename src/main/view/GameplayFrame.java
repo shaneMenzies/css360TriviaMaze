@@ -50,6 +50,9 @@ public class GameplayFrame extends JFrame {
     /** The "Help" menu containing options for game instructions and information about the game. */
     private final JMenu myHelp = new JMenu("Help");
 
+    /** The "Map" menu containing the full map. */
+    private final JMenu myMap =  new JMenu("Map");
+
     /** Music object for background music. */
     private final Music myMusic = new Music();
 
@@ -103,6 +106,7 @@ public class GameplayFrame extends JFrame {
         final JMenuItem save = new JMenuItem("Save");
         final JMenuItem load = new JMenuItem("Load");
         final JMenuItem exit = new JMenuItem("Exit");
+        final JMenuItem miniMap = new JMenuItem("View Map");
 
         final JMenuItem about = new JMenuItem("About");
         final JMenuItem gameInstructions = new JMenuItem("Game Play Instructions");
@@ -133,6 +137,26 @@ public class GameplayFrame extends JFrame {
                 D ➜ Move Player Right               loses all their lives, game over!
                 """));
 
+        miniMap.addActionListener(e -> {
+            JDialog mapDialog = new JDialog(myGameFrame, "Maze Map", true);
+            mapDialog.setSize(600, 600);
+            mapDialog.setLocationRelativeTo(myGameFrame);
+
+            JPanel mapPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    Graphics2D g2D = (Graphics2D) g;
+
+                    Image miniMapImage = myGamePanel.getMazeView().getFull();
+
+                    g2D.drawImage(miniMapImage, 0, 0, getWidth(), getHeight(), null);
+                }
+            };
+            mapDialog.add(mapPanel);
+            mapDialog.setVisible(true);
+        });
+
         myFile.add(newGame);
         myFile.add(save);
         myFile.add(load);
@@ -141,8 +165,11 @@ public class GameplayFrame extends JFrame {
         myHelp.add(about);
         myHelp.add(gameInstructions);
 
+        myMap.add(miniMap);
+
         myMenuBar.add(myFile);
         myMenuBar.add(myHelp);
+        myMenuBar.add(myMap);
 
         myGameFrame.setJMenuBar(myMenuBar);
     }

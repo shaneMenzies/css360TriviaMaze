@@ -32,7 +32,7 @@ public class StatsPanel {
      *
      * @param theGameModel the game's logic.
      */
-    public StatsPanel(GameModel theGameModel) {
+    public StatsPanel(final GameModel theGameModel) {
         myGameModel = theGameModel;
 
         myScore = new JTextField();
@@ -44,33 +44,33 @@ public class StatsPanel {
 
     /** Displays lives and score under player image. */
     private void showStats() {
-            myLives.setBounds(700, 600, 150, 50);
-            myScore.setBounds(700, 650, 150, 50);
+        myLives.setBounds(700, 600, 150, 50);
+        myScore.setBounds(700, 650, 150, 50);
 
-            myLives.setBorder(null);
-            myScore.setBorder(null);
+        myLives.setBorder(null);
+        myScore.setBorder(null);
 
-            myLives.setBackground(new Color(0, 0, 0, 0));
-            myScore.setBackground(new Color(0, 0, 0, 0));
+        myLives.setBackground(new Color(0, 0, 0, 0));
+        myScore.setBackground(new Color(0, 0, 0, 0));
 
-            myLives.setEditable(false);
-            myScore.setEditable(false);
+        myLives.setEditable(false);
+        myScore.setEditable(false);
     }
 
     /** Custom text for questions, answers and buttons. */
     private void customText() {
-        Font myFont;
+        Font font;
         try {
-            myFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/pixel_font_bold.ttf")).deriveFont(30f);
-            GraphicsEnvironment g = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/pixel_font_bold.ttf")).deriveFont(30f);
+            final GraphicsEnvironment g = GraphicsEnvironment.getLocalGraphicsEnvironment();
             g.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/pixel_font_bold.ttf")));
 
-        } catch (IOException | FontFormatException theException) {
-            myFont = new Font("Times New Roman", Font.BOLD, 20);
+        } catch (final IOException | FontFormatException exception) {
+            font = new Font("Times New Roman", Font.BOLD, 20);
         }
 
-        myLives.setFont(myFont);
-        myScore.setFont(myFont);
+        myLives.setFont(font);
+        myScore.setFont(font);
 
         myLives.setForeground(Color.WHITE);
         myScore.setForeground(Color.WHITE);
@@ -78,11 +78,11 @@ public class StatsPanel {
 
     /** Updates players lives and score through game play. */
     public void updateStats() {
-            myLives.setText("Lives: " + myGameModel.getState().getPlayer().getLives());
-            myScore.setText("Score: " + myGameModel.getState().getPlayer().getScore());
+        myLives.setText("Lives: " + myGameModel.getState().getPlayer().getLives());
+        myScore.setText("Score: " + myGameModel.getState().getPlayer().getScore());
 
-            myLives.repaint();
-            myScore.repaint();
+        myLives.repaint();
+        myScore.repaint();
     }
 
     /** Getter for lives text field. */
