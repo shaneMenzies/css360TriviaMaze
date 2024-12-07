@@ -16,7 +16,7 @@ public class GameOperations {
     private final GameModel myGameModel;
 
     /** Game frame object for GUI. */
-    private GameplayFrame myGameFrame;
+    private final GameplayFrame myGameFrame;
 
     /** Constructs new game operations object to then handle whichever functionality. */
     public GameOperations(final GameModel theGameModel, final GameplayFrame theGameFrame) {
