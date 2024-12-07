@@ -16,7 +16,7 @@ public class GameOperations {
     private final GameModel myGameModel;
 
     /** Game frame object for GUI. */
-    private final GameplayFrame myGameFrame;
+    private GameplayFrame myGameFrame;
 
     /** Constructs new game operations object to then handle whichever functionality. */
     public GameOperations(final GameModel theGameModel, final GameplayFrame theGameFrame) {
@@ -27,9 +27,6 @@ public class GameOperations {
     /** Starts a new game. */
     public void startNewGame() {
         myGameModel.newGame();
-        myGameFrame.dispose();
-        myGameFrame.getMainGameMusic().getMusicStop();
-        new GameplayFrame(myGameModel);
     }
 
     /** Saves game. */
