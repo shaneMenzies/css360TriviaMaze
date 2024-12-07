@@ -53,7 +53,10 @@ public class QuestionsPanel extends JPanel {
             return;
         }
 
-        final JLabel questionLabel = new JLabel(question.getQuestion());
+        String questionText = question.getQuestion();
+        questionText = "<html>" + questionText.replace("\n", "<br>") + "</html>";
+
+        final JLabel questionLabel = new JLabel(questionText);
         questionLabel.setFont(myFont);
         questionLabel.setForeground(Color.WHITE);
         add(questionLabel);
@@ -82,18 +85,17 @@ public class QuestionsPanel extends JPanel {
         answer3Button.setFont(myFont);
         add(answer3Button);
 
-        final JButton answer4Button = new JButton("D");
-        answer4Button.setFont(myFont);
-        add(answer4Button);
-
         answer1Button.addActionListener(e -> myGameModel.getState().answerQuestion("A"));
         answer2Button.addActionListener(e -> myGameModel.getState().answerQuestion("B"));
         answer3Button.addActionListener(e -> myGameModel.getState().answerQuestion("C"));
-        answer4Button.addActionListener(e -> myGameModel.getState().answerQuestion("D"));
     }
 
     /** handles rendering/display for true/false questions with buttons. */
     private void trueFalse() {
+        final JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.BLACK);
+
         final JButton trueButton = new JButton("True");
         final JButton falseButton = new JButton("False");
 
@@ -103,8 +105,10 @@ public class QuestionsPanel extends JPanel {
         trueButton.setFont(myFont);
         falseButton.setFont(myFont);
 
-        add(trueButton);
-        add(falseButton);
+        buttonPanel.add(trueButton);
+        buttonPanel.add(falseButton);
+
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     /** handles rendering/display for short answer questions with text field and submit button. */

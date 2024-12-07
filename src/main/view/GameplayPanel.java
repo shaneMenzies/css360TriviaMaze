@@ -29,9 +29,6 @@ public class GameplayPanel extends JPanel {
     /** MazeView instance to render the maze. */
     private final MazeView myMazeView;
 
-    /** PlayerView instance to render the player. */
-    private final PlayerView myPlayerView;
-
     /** Object for game logic. */
     private final GameModel myGameModel;
 
@@ -40,9 +37,9 @@ public class GameplayPanel extends JPanel {
         myGameModel = theGameModel;
         myPlayerManager = new PlayerManager(myGameModel);
         myMazeView = new MazeView(TILE_WIDTH, TILE_HEIGHT, myGameModel);
-        myPlayerView = new PlayerView(myPlayerManager, myGameModel);
+        final PlayerView playerView = new PlayerView(myPlayerManager, myGameModel);
 
-        myMazeView.addRoomViewHook(myPlayerView.getRoomViewHook());
+        myMazeView.addRoomViewHook(playerView.getRoomViewHook());
         myMazeView.addRoomViewHook(new ExitViewHook());
 
         theGameModel.getState().setPhase(GamePlayPhase.IN_PROGRESS);
@@ -89,6 +86,10 @@ public class GameplayPanel extends JPanel {
         repaint();
     }
 
+    public MazeView getMazeView() {
+        return myMazeView;
+    }
+
     /**
      * RoomViewHook to draw the maze's exit door.
      */
@@ -115,5 +116,4 @@ public class GameplayPanel extends JPanel {
             }
         }
     }
-
 }
