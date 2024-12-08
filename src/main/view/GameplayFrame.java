@@ -111,7 +111,14 @@ public class GameplayFrame extends JFrame {
         final JMenuItem about = new JMenuItem("About");
         final JMenuItem gameInstructions = new JMenuItem("Game Play Instructions");
 
-        newGame.addActionListener(e -> myGameOp.startNewGame());
+        newGame.addActionListener(e -> {
+            myGameOp.startNewGame();
+            myMusic.getMusicStop();
+            backgroundMusic();
+            myOutcome.setVisible(false);
+            myGamePanel.setVisible(true);
+            myGamePanel.requestFocusInWindow();
+        });
 
         save.addActionListener(e -> myGameOp.saveGame());
 
